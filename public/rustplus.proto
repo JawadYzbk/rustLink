@@ -85,7 +85,7 @@ message AppInfo {
 	required uint32 wipeTime = 6;
 	required uint32 players = 7;
 	required uint32 maxPlayers = 8;
-	required uint32 queuedPlayers = 9;
+	optional uint32 queuedPlayers = 9;
 	optional uint32 seed = 10;
 	optional uint32 salt = 11;
 }
@@ -127,14 +127,14 @@ message AppTeamInfo {
 		required string name = 2;
 		required float x = 3;
 		required float y = 4;
-		required bool isOnline = 5;
-		required uint32 spawnTime = 6;
-		required bool isAlive = 7;
-		required uint32 deathTime = 8;
+		optional bool isOnline = 5;
+		optional uint32 spawnTime = 6;
+		optional bool isAlive = 7;
+		optional uint32 deathTime = 8;
 	}
 
 	message Note {
-		required int32 type = 2;
+		optional int32 type = 2;
 		required float x = 3;
 		required float y = 4;
 	}
@@ -154,7 +154,7 @@ message AppChatMessage {
 }
 
 message AppEntityInfo {
-	required AppEntityType type = 1;
+	optional AppEntityType type = 1;
 	required AppEntityPayload payload = 3;
 }
 
@@ -175,7 +175,7 @@ message AppEntityPayload {
 	message Item {
 		required int32 itemId = 1;
 		required int32 quantity = 2;
-		required bool itemIsBlueprint = 3;
+		optional bool itemIsBlueprint = 3;
 	}
 
 }
@@ -198,7 +198,7 @@ message Vector4 {
 message AppMarker {
 
 	required uint32 id = 1;
-	required AppMarkerType type = 2;
+	optional AppMarkerType type = 2;
 	required float x = 3;
 	required float y = 4;
 	optional uint64 steamId = 5;
@@ -215,9 +215,9 @@ message AppMarker {
 		required int32 quantity = 2;
 		required int32 currencyId = 3;
 		required int32 costPerItem = 4;
-		required int32 amountInStock = 5;
-		required bool itemIsBlueprint = 6;
-		required bool currencyIsBlueprint = 7;
+		optional int32 amountInStock = 5;
+		optional bool itemIsBlueprint = 6;
+		optional bool currencyIsBlueprint = 7;
 	}
 
 }
