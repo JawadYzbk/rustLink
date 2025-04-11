@@ -1,0 +1,78 @@
+/* remove default margin and padding */
+html, body {
+    margin: 0 !important;
+    padding: 0 !important;
+}
+
+/* disable selection */
+:not(input):not(textarea),
+:not(input):not(textarea)::after,
+:not(input):not(textarea)::before {
+    -webkit-user-select: none;
+    user-select: none;
+}
+input, button, textarea, :focus {
+    outline: none;
+}
+
+/* disable image and anchor dragging */
+a:not([draggable=true]), img:not([draggable=true]) {
+    -webkit-user-drag: none;
+    user-drag: none;
+}
+a[href^="http://"],
+a[href^="https://"],
+a[href^="ftp://"] {
+    -webkit-user-drag: auto;
+    user-drag: auto;
+}
+
+/* hide the scrollbar */
+::-webkit-scrollbar {
+    width: 0;
+}
+
+/* remove default styles from leaflet div icons */
+.leaflet-div-icon {
+    background: unset !important;
+    border: unset !important;
+}
+
+/* use custom font for rust monument markers */
+.rust-map-monument-text {
+    color:#000000;
+    white-space:nowrap;
+    font-family:PermanentMarker,sans-serif;
+}
+
+.chinook-blade-spin-clockwise {
+    animation:chinook-blade-spin-clockwise 0.6s infinite linear
+}
+
+.chinook-blade-spin-anticlockwise {
+    animation:chinook-blade-spin-anticlockwise 0.6s infinite linear
+}
+
+@keyframes chinook-blade-spin-clockwise {
+    0%{
+        transform:rotate(0deg)
+    }
+    100%{
+        transform:rotate(359deg)
+    }
+}
+
+@keyframes chinook-blade-spin-anticlockwise {
+    0%{
+        transform:rotate(0deg)
+    }
+    100%{
+        transform:rotate(-359deg)
+    }
+}
+
+/* add font used by rust map */
+@font-face {
+    font-family: 'PermanentMarker';
+    src: url('../fonts/PermanentMarker.ttf');
+}
