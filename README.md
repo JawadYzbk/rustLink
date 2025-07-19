@@ -30,6 +30,7 @@ Atlas is an **unofficial** interactive map experience for [Rust](https://rust.fa
 - Shows realtime server stats
     - Current player count
     - How long since last wipe
+- Display real-time in-game time with day/night indicator
 - Send and Receive realtime Team Chat messages
 - Search items for sale in Vending Machines across the map
 - Supports "Pairing" with Rust Servers from the in game menu
