@@ -18,6 +18,12 @@
         "description": "Vertical Abyss container taken from the depths of the ocean"
     },
     {
+        "id": -1896395719,
+        "shortname": "advancedblueprintfragment",
+        "name": "Advanced Blueprint Fragment",
+        "description": "Precision schematics with complex information, multiple fragments are necessary for crafting a Tier 3 Workbench."
+    },
+    {
         "id": -1498613415,
         "shortname": "advancedcoolingtea",
         "name": "Advanced Cooling Tea",
@@ -182,8 +188,8 @@
     {
         "id": 550753330,
         "shortname": "ammo.snowballgun",
-        "name": "",
-        "description": ""
+        "name": "Snowball Gun Ammo",
+        "description": null
     },
     {
         "id": -1432674913,
@@ -438,6 +444,12 @@
         "description": "A wooden barricade with barbed wire, made of Wood and Metal Fragments. The barbed wire causes damage and will also slow player movement."
     },
     {
+        "id": -143481979,
+        "shortname": "basicblueprintfragment",
+        "name": "Basic Blueprint Fragment",
+        "description": "Damaged diagrams containing partial information to constuct a Tier 2 Workbench for advanced crafting. Several fragments are needed.\n\n20 Basic Fragments can be pieced together to make an Advanced Fragment."
+    },
+    {
         "id": -1274093662,
         "shortname": "bathtub.planter",
         "name": "Bath Tub Planter",
@@ -447,7 +459,7 @@
         "id": -479314201,
         "shortname": "batteringram.head.repair",
         "name": "Battering Ram Head",
-        "description": ""
+        "description": null
     },
     {
         "id": -187304968,
@@ -490,6 +502,18 @@
         "shortname": "beachtowel",
         "name": "Beach Towel",
         "description": "A colourful beach towel. Placing this will give you a location to respawn."
+    },
+    {
+        "id": -576866254,
+        "shortname": "beanbagseatfabric",
+        "name": "Fabric Beanbag Seat",
+        "description": "A cozy fabric beanbag seat to sink in to."
+    },
+    {
+        "id": -1220928936,
+        "shortname": "beanbagseatleather",
+        "name": "Leather Beanbag Seat",
+        "description": "A cozy leather beanbag seat to sink in to."
     },
     {
         "id": -989755543,
@@ -849,7 +873,7 @@
         "id": 1524980732,
         "shortname": "carvable.pumpkin",
         "name": "Carvable Pumpkin",
-        "description": "A pumpkin that you can carve. \n\nRequires wood as a fuel source."
+        "description": "A pumpkin you can carve any design you'd like into and light up at night. Requires wood as a fuel source."
     },
     {
         "id": 476066818,
@@ -918,10 +942,16 @@
         "description": "A Chainsaw. Very effective at cutting trees in addition to soft fleshy objects. Requires Low Grade Fuel to run."
     },
     {
+        "id": -463012608,
+        "shortname": "chair.ejector.seat",
+        "name": "Salvaged Ejector Seat",
+        "description": "A chair made from an ejector seat. A decorative item which provides comfort while seated. Stays put."
+    },
+    {
         "id": -1944704288,
         "shortname": "chair.icethrone",
         "name": "Ice Throne",
-        "description": "Every home needs a chair. A decorative item which provides comfort while seated."
+        "description": "An Ice Throne. Fit for the one true arctic warlord."
     },
     {
         "id": 1534542921,
@@ -934,6 +964,18 @@
         "shortname": "charcoal",
         "name": "Charcoal",
         "description": "Byproduct from campfires and furnaces used for crafting gunpowder."
+    },
+    {
+        "id": 2130820932,
+        "shortname": "charity.plushy.01",
+        "name": "Cancer Research UK Plushie",
+        "description": "A soft and squishy plush that provides comfort in your base. First sold on the Rust store in October 2025 to support Cancer Research UK, each purchase helped fund real-world cancer research.\n\nwww.cancerresearchuk.org"
+    },
+    {
+        "id": 2130820933,
+        "shortname": "charity.plushy.02",
+        "name": "Ronald McDonald House Plushie",
+        "description": "A soft and squishy plush that provides comfort in your base. First sold on the Rust store in October 2025 to support Ronald McDonald House Charities, helping ease the burden on families by providing free ‘home away from home’ accommodation near hospitals.\n\nwww.rmhc.org.uk"
     },
     {
         "id": 1973684065,
@@ -1092,6 +1134,12 @@
         "description": "Cloth from an animal or a Hemp Bush. Used in many clothing items, weapons, and more."
     },
     {
+        "id": -606898372,
+        "shortname": "clothing.mannequin",
+        "name": "#clothingmannequin",
+        "description": "#clothing.mannequin.desc"
+    },
+    {
         "id": -903796529,
         "shortname": "clothing.mod.armorinsert_asbestos",
         "name": "Asbestos Armor Insert",
@@ -1162,6 +1210,12 @@
         "shortname": "command.block",
         "name": "Command Block",
         "description": "A block that runs commands"
+    },
+    {
+        "id": 594041190,
+        "shortname": "compass",
+        "name": "Compass",
+        "description": "A handy tool which indicates which direction you're facing. Will reveal your location on the map in Hardcore mode if equipped on your belt."
     },
     {
         "id": -1488398114,
@@ -1449,7 +1503,7 @@
         "id": -1151332840,
         "shortname": "door.double.hinged.bardoors",
         "name": "Wooden Frontier Bar Doors",
-        "description": "Hand-carved, rugged bar doors embody the spirit of the frontier. A must-have for any survivor."
+        "description": "A Cheap door to secure your base. Its vulnerability to fire and weak explosive resistance makes the door a temporary solution to securing your base. Due to its flaws you should look at upgrading to a higher tier door such as Sheet Metal.\n\nThe Wooden Door can take two kinds of locks the basic Key Lock and the Code Lock. To pick up the door, remove any locks and open, hold down the E (USE) key and select 'Pickup'."
     },
     {
         "id": 1390353317,
@@ -1473,7 +1527,7 @@
         "id": 818733919,
         "shortname": "door.hinged.industrial.a",
         "name": "Industrial Door",
-        "description": "Medium strength door, vulnerable to explosives."
+        "description": "A red industrial door with a window."
     },
     {
         "id": -2067472972,
@@ -1503,7 +1557,7 @@
         "id": -258574361,
         "shortname": "draculacape",
         "name": "Dracula Cape",
-        "description": "A robustly thick outer garment providing ample protection to the wearer."
+        "description": "A Halloween themed replacement for the Vagabond Jacket which flows in the wind."
     },
     {
         "id": 1865253052,
@@ -1620,6 +1674,12 @@
         "description": "This object prevents passthrough while power is received through its second input."
     },
     {
+        "id": 104856514,
+        "shortname": "electric.bulbstringlights",
+        "name": "Bulb String Lights",
+        "description": "A string of glowing bulbs, can be deployed point by point to light up your base."
+    },
+    {
         "id": -1778897469,
         "shortname": "electric.button",
         "name": "Button",
@@ -1630,6 +1690,12 @@
         "shortname": "electric.cabletunnel",
         "name": "Cable Tunnel",
         "description": "Allows you to pass a cable through a wall. Each input will forward the amount it receives to the corresponding output on the other side."
+    },
+    {
+        "id": -1510616686,
+        "shortname": "electric.chandelier",
+        "name": "Chandelier",
+        "description": "A large adjustable electric chandelier. Very fancy."
     },
     {
         "id": -216999575,
@@ -1650,10 +1716,28 @@
         "description": "A Door Controller. Will manipulate the state of the closest door when it receives power"
     },
     {
+        "id": 54436981,
+        "shortname": "electric.fairylights",
+        "name": "Fairy Lights",
+        "description": "A wire of small fairy bulbs, can be deployed point by point to light up your base."
+    },
+    {
         "id": -939424778,
         "shortname": "electric.flasherlight",
         "name": "Flasher Light",
         "description": "A flashing blue light"
+    },
+    {
+        "id": 640470230,
+        "shortname": "electric.fluorescentlight.ceiling",
+        "name": "Ceiling Fluorescent Light",
+        "description": "A flicker-free fluorescent light."
+    },
+    {
+        "id": 1892536031,
+        "shortname": "electric.fluorescentlight",
+        "name": "Fluorescent Light",
+        "description": "Bright enough to see what you’re doing."
     },
     {
         "id": 1849887541,
@@ -1758,6 +1842,18 @@
         "description": "Splits an electrical signal into 3 multiple signals. the amount passed through is equal to the input amount divided by the number of used output slots."
     },
     {
+        "id": -1258821205,
+        "shortname": "electric.spotlight",
+        "name": "Spot Light",
+        "description": "A spotlight you can orient with a hammer."
+    },
+    {
+        "id": -2134097299,
+        "shortname": "electric.spotlight.tripod",
+        "name": "Tripod Spot Light",
+        "description": "A spotlight you can orient with a hammer."
+    },
+    {
         "id": -781014061,
         "shortname": "electric.sprinkler",
         "name": "Sprinkler",
@@ -1770,6 +1866,12 @@
         "description": "A simple electric switch."
     },
     {
+        "id": 1717250161,
+        "shortname": "electric.tablelight",
+        "name": "Electric Table Lamp",
+        "description": "A small light source made out of an old oil can."
+    },
+    {
         "id": 1371909803,
         "shortname": "electric.teslacoil",
         "name": "Tesla Coil",
@@ -1780,6 +1882,12 @@
         "shortname": "electric.timer",
         "name": "Timer",
         "description": "A Timer switch, will pass power through for duration."
+    },
+    {
+        "id": 656829501,
+        "shortname": "electric.wallcabinet",
+        "name": "Wall Cabinet",
+        "description": "A cabinet with a shelf for small items."
     },
     {
         "id": 1293102274,
@@ -2601,7 +2709,7 @@
         "id": -1785231475,
         "shortname": "halloween.surgeonsuit",
         "name": "Surgeon Scrubs",
-        "description": "A Surgeon Suit"
+        "description": "A bloody surgeon outfit. Protects your entire body and provides good protection while giving off a creepy halloween vibe."
     },
     {
         "id": 200773292,
@@ -2691,7 +2799,7 @@
         "id": 271048478,
         "shortname": "hat.ratmask",
         "name": "Rat Mask",
-        "description": "A Beautifully crafted bronze and gold Rat mask to celebrate the 2020 Lunar New Year"
+        "description": "A Beautifully crafted bronze and gold Rat mask to celebrate the 2020 Lunar New Year. This item replaces the wolf headdress."
     },
     {
         "id": -1314079879,
@@ -2738,8 +2846,8 @@
     {
         "id": -797592358,
         "shortname": "hazmatsuit.diver",
-        "name": "Abyss Divers Suit",
-        "description": "A divers suit found in the abyss, doubles as a reliable hazmat suit"
+        "name": "Abyss Pack",
+        "description": "A damaged deep-water survival suit was found in the abyss. Although it may no longer serve its original purpose, it functions reliably as a Hazmat suit. Owning this suit also grants access to the Abyss Pickaxe, Abyss Hatchet, Abyss Torch, and Abyss AR."
     },
     {
         "id": -105415879,
@@ -2764,6 +2872,12 @@
         "shortname": "hazmatsuit.nomadsuit",
         "name": "Nomad Suit",
         "description": "A nomad suit."
+    },
+    {
+        "id": 1065594600,
+        "shortname": "hazmatsuit.pilot",
+        "name": "Pilot Hazmat",
+        "description": "A hazmat suit made from a fighter pilot's flight suit."
     },
     {
         "id": -560304835,
@@ -3302,8 +3416,8 @@
     {
         "id": -73195037,
         "shortname": "legacy bow",
-        "name": "Legacy bow",
-        "description": "Legacy Bow, useful for short to medium range combat and hunting."
+        "name": "Legacy Bow",
+        "description": "Hunting Bow, useful for short to medium range combat and hunting."
     },
     {
         "id": 607400343,
@@ -3372,6 +3486,12 @@
         "description": "High damage, high rate of fire, belt fed light machine gun."
     },
     {
+        "id": 1586884551,
+        "shortname": "lock.code.a.pilot",
+        "name": "Flight Control Codelock",
+        "description": "An electronic lock made of airplane parts. Locked and unlocked with four-digit code."
+    },
+    {
         "id": 1159991980,
         "shortname": "lock.code",
         "name": "Code Lock",
@@ -3381,7 +3501,7 @@
         "id": -850982208,
         "shortname": "lock.key",
         "name": "Key Lock",
-        "description": "Place on a door to avoid any unwelcome guests. To craft your key first place the lock on a door and hold E while looking at the Key lock and select 'Create Key', a key will now be added to your crafting queue.\n\nIf the key is lost, you cannot make another, so don't forget to make extras and put them in a safe place!"
+        "description": "Place on a door to prevent unwelcome guests. You can create a key to share with your friends, don't let it fall in the wrong hands!"
     },
     {
         "id": -110921842,
@@ -3454,6 +3574,12 @@
         "shortname": "mailbox",
         "name": "Mail Box",
         "description": "A Mailbox that accepts notes. Only you can access the mail due to a one way slit."
+    },
+    {
+        "id": -1035206446,
+        "shortname": "mannequin",
+        "name": "Clothing Mannequin",
+        "description": "Displays a set of clothing, quickly remove items off your player onto the Mannequin. Goes by Manny."
     },
     {
         "id": 696029452,
@@ -3591,7 +3717,7 @@
         "id": 625599716,
         "shortname": "metal.shield",
         "name": "Metal Shield",
-        "description": "A large sturdy metal shield, keeps arrows and bullets at bay. Usable\r with single handed weapons and tools."
+        "description": "A large sturdy metal shield, keeps arrows and bullets at bay. Usable with single handed weapons and tools."
     },
     {
         "id": 1882709339,
@@ -3651,7 +3777,7 @@
         "id": 1426574435,
         "shortname": "minihelicopter.repair",
         "name": "Minicopter",
-        "description": ""
+        "description": null
     },
     {
         "id": -1130709577,
@@ -3711,7 +3837,7 @@
         "id": -2047081330,
         "shortname": "movembermoustache",
         "name": "Movember Moustache",
-        "description": "A magnificent moustache for Movember"
+        "description": "A magnificent moustache (it acts as a hairy bandana) - all proceeds go to Movember, a charity promoting men's health awareness,"
     },
     {
         "id": 3380160,
@@ -3948,6 +4074,12 @@
         "description": "It's people. Survivor's pie is made out of people. Provides a boost to health, hunger and hydration. Increases yield when harvesting corpses for a short time."
     },
     {
+        "id": 537946062,
+        "shortname": "pilot.hazmat.box.wooden",
+        "name": "Flight Recorder Box",
+        "description": "Keep your things in this Flight Recorder box. Stores up to 18 items."
+    },
+    {
         "id": -1442496789,
         "shortname": "pinata",
         "name": "Pinata",
@@ -3981,7 +4113,7 @@
         "id": 1953903201,
         "shortname": "pistol.nailgun",
         "name": "Nailgun",
-        "description": "A construction tool turned deadly"
+        "description": "A construction tool turned deadly."
     },
     {
         "id": 1914691295,
@@ -4000,6 +4132,12 @@
         "shortname": "pistol.revolver",
         "name": "Revolver",
         "description": "A standard eight shot revolver."
+    },
+    {
+        "id": 1673224590,
+        "shortname": "pistol.semiauto.a.m15",
+        "name": "M15 Semi-Automatic Pistol",
+        "description": "A special issue Air Force semi-automatic pistol, fires rapidly and with good accuracy."
     },
     {
         "id": 818877484,
@@ -4233,7 +4371,7 @@
         "id": -92315244,
         "shortname": "revolver.hc",
         "name": "High Caliber Revolver",
-        "description": "A powerful six-shot revolver using 5.56 rounds. High damage and accuracy, but slow fire rate and even slower to reload."
+        "description": "High Caliber Revolver"
     },
     {
         "id": 596469572,
@@ -4251,7 +4389,7 @@
         "id": 1394042569,
         "shortname": "rhib",
         "name": "RHIB",
-        "description": ""
+        "description": null
     },
     {
         "id": -139037392,
@@ -4280,7 +4418,7 @@
     {
         "id": 472505338,
         "shortname": "rifle.ak.med",
-        "name": "Medieval Assault Rifle",
+        "name": "Medieval AR",
         "description": "Medieval themed high damage machine rifle."
     },
     {
@@ -4334,7 +4472,7 @@
     {
         "id": -699558439,
         "shortname": "roadsign.gloves",
-        "name": "Roadsign Gloves",
+        "name": "Road Sign Gloves",
         "description": "Gloves made out of metal, offer a good amount of protection to the upper body."
     },
     {
@@ -4371,7 +4509,7 @@
         "id": 442886268,
         "shortname": "rocket.launcher",
         "name": "Rocket Launcher",
-        "description": "Shoots rockets slightly farther than North Korea."
+        "description": "Unmatched craftsmanship meets devastating firepower."
     },
     {
         "id": -1863063690,
@@ -4383,13 +4521,13 @@
         "id": 1758333838,
         "shortname": "rockingchair.rockingchair2",
         "name": "Teal",
-        "description": ""
+        "description": "A rocking chair that responds to your input. Don't fire whilst seated."
     },
     {
         "id": 192249897,
         "shortname": "rockingchair.rockingchair3",
         "name": "Green",
-        "description": ""
+        "description": "A rocking chair that responds to your input. Don't fire whilst seated."
     },
     {
         "id": 1414245522,
@@ -4407,7 +4545,7 @@
         "id": 1878053256,
         "shortname": "rowboat",
         "name": "Rowboat",
-        "description": ""
+        "description": null
     },
     {
         "id": -1104881824,
@@ -4491,7 +4629,7 @@
         "id": 2126889441,
         "shortname": "santabeard",
         "name": "Santa Beard",
-        "description": "A santa beard. Ho Ho ho."
+        "description": "A santa beard. Ho Ho ho. This item acts as a hairy bandana."
     },
     {
         "id": -575483084,
@@ -4599,7 +4737,7 @@
         "id": -1884328185,
         "shortname": "scraptransportheli.repair",
         "name": "Scrap Transport Helicopter",
-        "description": ""
+        "description": null
     },
     {
         "id": 504109620,
@@ -5001,7 +5139,7 @@
         "id": -216116642,
         "shortname": "skulldoorknocker",
         "name": "Skull Door Knocker",
-        "description": "A spooky skull door knocker"
+        "description": "A spooky heavy iron door knocker. Its haunted skull will produce flames when distrubed."
     },
     {
         "id": -25740268,
@@ -5031,31 +5169,31 @@
         "id": 1819863051,
         "shortname": "skylantern",
         "name": "Sky Lantern",
-        "description": "A beautiful sky lantern. Can be launched in any direction. Has one inventory slot. Can be Ignited with a lit torch."
+        "description": "A set of beautiful sky lanterns. Comes in 5 colors. Can be launched in any direction. Has one inventory slot. Can be Ignited with a lit torch."
     },
     {
         "id": -1770889433,
         "shortname": "skylantern.skylantern.green",
         "name": "Sky Lantern - Green",
-        "description": ""
+        "description": "#skylantern.skylantern.green.desc"
     },
     {
         "id": -1824770114,
         "shortname": "skylantern.skylantern.orange",
         "name": "Sky Lantern - Orange",
-        "description": ""
+        "description": "#skylantern.skylantern.orange.desc"
     },
     {
         "id": 831955134,
         "shortname": "skylantern.skylantern.purple",
         "name": "Sky Lantern - Purple",
-        "description": ""
+        "description": "#skylantern.skylantern.purple.desc"
     },
     {
         "id": -1433390281,
         "shortname": "skylantern.skylantern.red",
         "name": "Sky Lantern - Red",
-        "description": ""
+        "description": "#skylantern.skylantern.red.desc"
     },
     {
         "id": -333406828,
@@ -5268,9 +5406,15 @@
         "description": "A set of spikes that will slow down and hurt anyone that walks over them."
     },
     {
+        "id": -1850297170,
+        "shortname": "spikes.trap",
+        "name": "Small Spike Trap",
+        "description": "A small improvised trap that injures and slows anyone who steps on it."
+    },
+    {
         "id": -1100422738,
         "shortname": "spinner.wheel",
-        "name": "Spinning wheel",
+        "name": "Spinning Wheel",
         "description": "An interactive spinning wheel."
     },
     {
@@ -5295,7 +5439,7 @@
         "id": -1366326648,
         "shortname": "spraycandecal",
         "name": "Spray Can Decal",
-        "description": ""
+        "description": null
     },
     {
         "id": -369760990,
@@ -5631,7 +5775,7 @@
         "id": -561148628,
         "shortname": "tugboat",
         "name": "Tugboat",
-        "description": ""
+        "description": null
     },
     {
         "id": -1478445584,
@@ -5661,7 +5805,7 @@
         "id": 20489901,
         "shortname": "twitchsunglasses",
         "name": "Purple Sunglasses",
-        "description": "Sunglasses - Gained from Rust's first Twitch drop event."
+        "description": "Sunglasses - Gained from Rust's first Twitch drop."
     },
     {
         "id": -1683726934,
@@ -5811,7 +5955,7 @@
         "id": 198438816,
         "shortname": "vending.machine",
         "name": "Vending Machine",
-        "description": "Trade your goods with other players safely by creating sell and buy orders.  \r\n\r\nIf a raider gains access to the rear panel, they will have free reign over all of your goodies. Keep it safe."
+        "description": "Trade your goods with other players safely by creating sell and buy orders.  \n\nIf a raider gains access to the rear panel, they will have free reign over all of your goodies. Keep it safe."
     },
     {
         "id": -870140677,
@@ -5894,19 +6038,19 @@
     {
         "id": 1115193056,
         "shortname": "wall.frame.lunar2025_a",
-        "name": "Lunar Wall Frame Inlay",
+        "name": "Wall Divider Pack",
         "description": "A Lunar New Year themed decorative wall divider with geometric inlay"
     },
     {
         "id": -450890885,
         "shortname": "wall.frame.lunar2025_b",
-        "name": "Lunar Wall Frame Swirling",
+        "name": "Wall Divider Pack",
         "description": "A Lunar New Year themed decorative wall divider with swirling inlay"
     },
     {
         "id": -2016974826,
         "shortname": "wall.frame.lunar2025_c",
-        "name": "Lunar Wall Frame Floral",
+        "name": "Wall Divider Pack",
         "description": "A Lunar New Year themed decorative wall divider with floral inlay"
     },
     {
@@ -5961,19 +6105,19 @@
         "id": -1614955425,
         "shortname": "wall.window.glass.reinforced",
         "name": "Strengthened Glass Window",
-        "description": "Bulletproof glass insert"
+        "description": "Strengthened Glass Window"
     },
     {
         "id": 1730664641,
         "shortname": "wallpaper.ceiling",
         "name": "Wallpaper Ceiling",
-        "description": ""
+        "description": null
     },
     {
         "id": -551431036,
         "shortname": "wallpaper.flooring",
         "name": "Wallpaper Flooring",
-        "description": ""
+        "description": null
     },
     {
         "id": 1629564540,
@@ -5985,7 +6129,7 @@
         "id": 553967074,
         "shortname": "wallpaper.wall",
         "name": "Wallpaper Wall",
-        "description": ""
+        "description": null
     },
     {
         "id": -1344017968,
@@ -6315,13 +6459,13 @@
         "id": -1497205569,
         "shortname": "woodmirror.small",
         "name": "Wood Mirror Small",
-        "description": "A small wooden mirror"
+        "description": "A small wooden frame"
     },
     {
         "id": 723407026,
         "shortname": "woodmirror.standing",
         "name": "Wood Mirror Standing",
-        "description": "A standing wooden mirror"
+        "description": "A standing wooden frontier themed mirror"
     },
     {
         "id": -541206665,
@@ -6447,7 +6591,7 @@
         "id": -151387974,
         "shortname": "xmas.lightstring.advanced",
         "name": "Deluxe Christmas Lights",
-        "description": "Colored, Animated, Powered Lights. Requires 5 electricity. Click to start placement, right click to end. Each unit is 0.5m long."
+        "description": "Colored, animated, powered Lights that can be deployed point by point to light up your base."
     },
     {
         "id": 1058261682,
