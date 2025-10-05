@@ -125,7 +125,7 @@
       <l-layer-group v-if="rustMapMarkers" layerType="overlay" name="Explosions">
         <l-marker v-if="mapMarker.type === 2" @click="onMapMarkerClick(mapMarker)" v-for="(mapMarker, index) in rustMapMarkers" :zIndexOffset="900" :lat-lng="getLatLngBoundsFromWorldXY(mapMarker.x, mapMarker.y)" :key="'map_marker:' + index">
           <l-tooltip content="Explosion"/>
-          <l-icon :icon-size="[30, 30]" icon-url="images/map/explosion_marker.png"></l-icon>
+          <l-icon :icon-size="[scaledIconSize, scaledIconSize]" icon-url="images/map/explosion_marker.png"></l-icon>
         </l-marker>
       </l-layer-group>
 
@@ -133,7 +133,7 @@
       <l-layer-group v-if="rustMapMarkers" layerType="overlay" name="Vending Machines">
         <l-marker v-if="mapMarker.type === 3" @click="onMapMarkerClick(mapMarker)" v-for="(mapMarker, index) in rustMapMarkers" :zIndexOffset="900" :lat-lng="getLatLngBoundsFromWorldXY(mapMarker.x, mapMarker.y)" :key="'map_marker:' + index">
           <l-tooltip :content="mapMarker.name"/>
-          <l-icon :icon-size="[30, 30]" icon-url="images/map/shop_green.png"></l-icon>
+          <l-icon :icon-size="[scaledIconSize, scaledIconSize]" icon-url="images/map/shop_green.png"></l-icon>
         </l-marker>
       </l-layer-group>
 
@@ -143,9 +143,9 @@
           <l-tooltip content="CH47"/>
           <l-icon>
             <div style="position:relative" :style="{ transform: 'rotate('+ (-mapMarker.rotation) +'deg)'}">
-              <img src="images/map/chinook_map_body.png" width="30" height="30"/>
-              <img src="images/map/chinook_map_blades.png" width="20" height="20" class="chinook-blade-spin-anticlockwise" style="position: absolute;top:-5px;left:5px;"/> <!-- anti clockwise rotation -->
-              <img src="images/map/chinook_map_blades.png" width="20" height="20" class="chinook-blade-spin-clockwise" style="position: absolute;top:15px;left:5px;"/> <!-- clockwise rotation -->
+              <img src="images/map/chinook_map_body.png" :width="scaledIconSize" :height="scaledIconSize"/>
+              <img src="images/map/chinook_map_blades.png" :width="scaledIconSize * 0.67" :height="scaledIconSize * 0.67" class="chinook-blade-spin-anticlockwise" :style="{ position: 'absolute', top: (-scaledIconSize * 0.17) + 'px', left: (scaledIconSize * 0.17) + 'px' }"/> <!-- anti clockwise rotation -->
+              <img src="images/map/chinook_map_blades.png" :width="scaledIconSize * 0.67" :height="scaledIconSize * 0.67" class="chinook-blade-spin-clockwise" :style="{ position: 'absolute', top: (scaledIconSize * 0.5) + 'px', left: (scaledIconSize * 0.17) + 'px' }"/> <!-- clockwise rotation -->
             </div>
           </l-icon>
         </l-marker>
@@ -156,7 +156,7 @@
         <l-marker v-if="mapMarker.type === 5" @click="onMapMarkerClick(mapMarker)" v-for="(mapMarker, index) in rustMapMarkers" :zIndexOffset="900" :lat-lng="getLatLngBoundsFromWorldXY(mapMarker.x, mapMarker.y)" :key="'map_marker:' + index">
           <l-tooltip content="Cargo Ship"/>
           <l-icon>
-            <img src="images/map/cargo_ship_body.png" width="30" height="30" :style="{ transform: 'rotate('+ (-mapMarker.rotation) +'deg)'}"/>
+            <img src="images/map/cargo_ship_body.png" :width="scaledIconSize" :height="scaledIconSize" :style="{ transform: 'rotate('+ (-mapMarker.rotation) +'deg)'}"/>
           </l-icon>
         </l-marker>
       </l-layer-group>
@@ -165,11 +165,19 @@
       <l-layer-group v-if="rustMapMarkers" layerType="overlay" name="Locked Crates">
         <l-marker v-if="mapMarker.type === 6" @click="onMapMarkerClick(mapMarker)" v-for="(mapMarker, index) in rustMapMarkers" :zIndexOffset="900" :lat-lng="getLatLngBoundsFromWorldXY(mapMarker.x, mapMarker.y)" :key="'map_marker:' + index">
           <l-tooltip content="Locked Crate"/>
-          <l-icon :icon-size="[30, 30]" icon-url="images/map/crate.png"></l-icon>
+          <l-icon :icon-size="[scaledIconSize, scaledIconSize]" icon-url="images/map/crate.png"></l-icon>
         </l-marker>
       </l-layer-group>
 
-      <!-- todo: GenericRadius=7 -->
+      <!-- map markers: TravelingVendor=7 -->
+      <l-layer-group v-if="rustMapMarkers" layerType="overlay" name="Traveling Vendor">
+        <l-marker v-if="mapMarker.type === 7" @click="onMapMarkerClick(mapMarker)" v-for="(mapMarker, index) in rustMapMarkers" :zIndexOffset="900" :lat-lng="getLatLngBoundsFromWorldXY(mapMarker.x, mapMarker.y)" :key="'map_marker:' + index">
+          <l-tooltip content="Traveling Vendor"/>
+          <l-icon :icon-size="[scaledIconSize, scaledIconSize]" icon-url="images/map/traveling_vendor.png"></l-icon>
+        </l-marker>
+      </l-layer-group>
+
+      <!-- todo: GenericRadius=8 -->
 
     </l-map>
 
@@ -900,6 +908,10 @@ export default {
 
   },
   computed: {
+    // Return fixed icon size that doesn't change with zoom level
+    scaledIconSize: function() {
+      return 30; // Fixed size regardless of zoom level
+    },
     rustVendingMachines: function() {
       return this.rustMapMarkers ? this.rustMapMarkers.filter((mapMarker) => {
         return mapMarker.type === 3; // VendingMachine=3

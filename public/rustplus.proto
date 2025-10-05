@@ -229,7 +229,8 @@ enum AppMarkerType {
 	CH47 = 4;
 	CargoShip = 5;
 	Crate = 6;
-	GenericRadius = 7;
+	TravelingVendor = 7;
+	GenericRadius = 8;
 }
 
 message AppCameraFrame {
