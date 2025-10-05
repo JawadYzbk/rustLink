@@ -24,15 +24,14 @@
         <!-- buy/sell selector -->
         <div class="flex mb-3">
           <div class="w-full">
-            <v-select
+            <select
               v-model="orderType"
-              :options="orderOptions"
-              :reduce="option => option.value"
-              label="label"
-              :clearable="false"
-              :searchable="false"
-              class="custom-select"
-            />
+              class="custom-select w-full bg-gray-700 border border-gray-600 text-white rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200"
+            >
+              <option v-for="option in orderOptions" :key="option.value" :value="option.value">
+                {{ option.label }}
+              </option>
+            </select>
           </div>
         </div>
 
@@ -149,79 +148,29 @@
   opacity: 0;
 }
 
-/* Custom vue-select styling */
-.custom-select >>> .vs__dropdown-toggle {
-  background-color: #374151;
-  border: 1px solid #4b5563;
-  border-radius: 0.5rem;
-  padding: 0.5rem 1rem;
-  color: white;
-  transition: all 0.2s;
+/* Custom native select styling */
+.custom-select {
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%236b7280' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='m6 8 4 4 4-4'/%3e%3c/svg%3e");
+  background-position: right 0.5rem center;
+  background-repeat: no-repeat;
+  background-size: 1.5em 1.5em;
+  padding-right: 2.5rem;
 }
 
-.custom-select >>> .vs__dropdown-toggle:hover {
+.custom-select:hover {
   border-color: #6b7280;
 }
 
-.custom-select >>> .vs__dropdown-toggle:focus-within {
-  outline: none;
-  ring: 2px;
-  ring-color: #3b82f6;
-  border-color: transparent;
-}
-
-.custom-select >>> .vs__selected {
-  color: white;
-  background: transparent;
-  border: none;
-  padding: 0;
-  margin: 0;
-}
-
-.custom-select >>> .vs__dropdown-menu {
+.custom-select option {
   background-color: #374151;
-  border: 1px solid #4b5563;
-  border-radius: 0.5rem;
-  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
-}
-
-.custom-select >>> .vs__dropdown-option {
   color: white;
-  padding: 0.75rem 1rem;
-}
-
-.custom-select >>> .vs__dropdown-option--highlight {
-  background-color: #3b82f6;
-  color: white;
-}
-
-.custom-select >>> .vs__dropdown-option:hover {
-  background-color: #4b5563;
-}
-
-.custom-select >>> .vs__open-indicator {
-  fill: #9ca3af;
-  transition: transform 0.2s;
-}
-
-.custom-select >>> .vs__open-indicator:hover {
-  fill: white;
-}
-
-.custom-select >>> .vs__dropdown-toggle--open .vs__open-indicator {
-  transform: rotate(180deg);
 }
 </style>
 
 <script>
-import vSelect from 'vue-select'
-import 'vue-select/dist/vue-select.css'
-
 export default {
   name: 'VendingMachineSearch',
-  components: {
-    vSelect
-  },
   props: {
     isShowing: Boolean,
     vendingMachines: Array,
