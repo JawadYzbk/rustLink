@@ -195,12 +195,12 @@
 
       <!-- grid overlay -->
       <l-layer-group layerType="overlay" name="Grid Lines">
-        <l-polyline v-for="(line, index) in gridLines" :key="'grid-line:' + index" :lat-lngs="line.points" :color="'#000000'" :weight="0.5" :opacity="0.8"></l-polyline>
+        <l-polyline v-for="(line, index) in gridLines" :key="'grid-line:' + index" :lat-lngs="line.points" :color="'#000000'" :weight="0.5" :opacity="0.8" :interactive="false"></l-polyline>
       </l-layer-group>
 
       <!-- grid labels -->
       <l-layer-group v-if="mapZoom > mapMinZoom" layerType="overlay" name="Grid Labels">
-        <l-marker v-for="(label, index) in gridLabels" :key="'grid-label:' + index" :lat-lng="label.position" :zIndexOffset="1000">
+        <l-marker v-for="(label, index) in gridLabels" :key="'grid-label:' + index" :lat-lng="label.position" :zIndexOffset="1000" :interactive="false">
           <l-icon class-name="grid-label-text" :iconAnchor="[10, 10]">
             <span class="grid-label" :style="{fontSize: (8 + mapZoom * 2) + 'px', color: 'black', fontWeight: 'normal', marginTop: (20 - mapZoom * 2) + 'px', marginBottom: (15 - mapZoom * 1.5) + 'px', padding: (12 - mapZoom * 1.5) + 'px'}">{{label.text}}</span>
           </l-icon>

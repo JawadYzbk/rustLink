@@ -38,6 +38,11 @@ a[href^="ftp://"] {
     border: unset !important;
 }
 
+/* make grid labels non-interactive */
+.grid-label-text {
+    pointer-events: none !important;
+}
+
 /* use custom font for rust monument markers */
 .rust-map-monument-text {
     color:#000000;
