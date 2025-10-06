@@ -27,6 +27,25 @@ Atlas is an **unofficial** interactive map experience for [Rust](https://rust.fa
     - Explosions
     - Vending Machines
     - Team Members
+- **Enhanced Grid System**
+    - Dynamic grid overlay with 150m squares for accurate positioning
+    - Grid labels with coordinate system (A1, B2, etc.) for easy location reference
+    - Smart zoom-based visibility - grid appears at zoom level 2 and above
+    - Adaptive label sizing that scales with zoom level for optimal readability
+    - Customizable grid line thickness and color (black lines for better visibility)
+    - Dynamic spacing and margins that adjust based on zoom level
+- **Advanced Vending Machine Search & Shop Interface**
+    - Enhanced search functionality with real-time filtering
+    - Buy/Sell order type toggle for comprehensive market analysis
+    - Advanced sorting options (by name, stock, and price)
+    - Zero stock filter toggle to hide out-of-stock items
+    - Modern UI with gradient headers and improved styling
+    - Empty state indicators for better user experience
+    - Redesigned shop contents with modern card-based layout
+    - Improved item display with stock indicators and hover effects
+- **Traveling Vendor Support**
+    - Added support for traveling vendor markers on the map
+    - Standardized map marker icon sizes for consistency
 - Shows realtime server stats
     - Current player count
     - How long since last wipe
@@ -36,6 +55,28 @@ Atlas is an **unofficial** interactive map experience for [Rust](https://rust.fa
 - Supports "Pairing" with Rust Servers from the in game menu
 - Supports adding Rust servers manually without using the in game pairing menu
     - Useful if you run your own server and have access to server files
+
+## Recent Improvements
+
+### Grid System Enhancements
+- **Accurate Grid Positioning**: Grid now properly aligns with Rust's 150m coordinate system
+- **Improved Visibility**: Grid lines changed to black color with optimized thickness (0.5px) for better contrast
+- **Smart Label Management**: Grid labels (A1, B2, etc.) are hidden at minimum zoom and scale dynamically with zoom level
+- **Enhanced Spacing**: Dynamic margins and padding that provide optimal spacing at different zoom levels
+- **Performance Optimized**: Grid rendering optimized for smooth interaction across all zoom levels
+
+### Vending Machine & Shop Enhancements
+- **Advanced Search & Filtering**: Implemented comprehensive search with buy/sell toggle, sorting by name/stock/price, and zero stock filtering
+- **Modern UI Design**: Redesigned vending machine search and contents with gradient headers, card-based layouts, and improved visual hierarchy
+- **Enhanced User Experience**: Added empty state indicators, hover effects, and smooth transitions for better interaction
+- **Market Analysis Tools**: Buy/sell order type selection for comprehensive market overview and price comparison
+
+### User Experience Improvements
+- **Zoom-Responsive Design**: All grid elements adapt intelligently to the current zoom level
+- **Better Readability**: Font sizes and spacing automatically adjust for optimal visibility
+- **Cleaner Interface**: Grid elements remain unobtrusive while providing essential positioning information
+- **Smooth Interactions**: Enhanced transitions and hover effects throughout the interface
+- **Intuitive Controls**: Improved form controls and toggle switches for better usability
 
 ## Features to Implement
 
