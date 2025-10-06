@@ -177,6 +177,20 @@
         </l-marker>
       </l-layer-group>
 
+      <!-- grid overlay -->
+      <l-layer-group layerType="overlay" name="Grid Lines">
+        <l-polyline v-for="(line, index) in gridLines" :key="'grid-line:' + index" :lat-lngs="line.points" :color="'#000000'" :weight="0.5" :opacity="0.8"></l-polyline>
+      </l-layer-group>
+
+      <!-- grid labels -->
+      <l-layer-group v-if="mapZoom > mapMinZoom" layerType="overlay" name="Grid Labels">
+        <l-marker v-for="(label, index) in gridLabels" :key="'grid-label:' + index" :lat-lng="label.position" :zIndexOffset="1000">
+          <l-icon class-name="grid-label-text" :iconAnchor="[10, 10]">
+            <span class="grid-label" :style="{fontSize: (8 + mapZoom * 2) + 'px', color: 'black', fontWeight: 'normal', marginTop: (20 - mapZoom * 2) + 'px', marginBottom: (15 - mapZoom * 1.5) + 'px', padding: (12 - mapZoom * 1.5) + 'px'}">{{label.text}}</span>
+          </l-icon>
+        </l-marker>
+      </l-layer-group>
+
       <!-- todo: GenericRadius=8 -->
 
     </l-map>
@@ -191,7 +205,7 @@
         <div @click="isShowingTeamChat = !isShowingTeamChat" class="flex p-3 rounded-t bg-gray-600 cursor-pointer">
 
           <div class="flex mr-2 my-auto">
-            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">g
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"></path>
             </svg>
           </div>
@@ -308,7 +322,7 @@
 </template>
 
 <script>
-import { LMap, LLayerGroup, LMarker, LIcon, LImageOverlay, LControlLayers, LTooltip } from "vue2-leaflet";
+import { LMap, LLayerGroup, LMarker, LIcon, LImageOverlay, LControlLayers, LTooltip, LPolyline } from "vue2-leaflet";
 import ServerNotConnected from "@/components/ServerNotConnected";
 import ServerError from "@/components/ServerError";
 import VendingMachineContents from "@/components/VendingMachineContents";
@@ -325,6 +339,7 @@ export default {
     LTooltip,
     LImageOverlay,
     LControlLayers,
+    LPolyline,
     ServerNotConnected,
     ServerError,
     VendingMachineContents,
@@ -386,6 +401,10 @@ export default {
       rustMapMarkers: [],
       rustTeamMembers: [],
       rustTeamChatMessages: [],
+
+      /* grid system */
+      gridLines: [],
+      gridLabels: [],
 
       isShowingItemModal: false,
       isShowingVendingMachineSearch: false,
@@ -875,6 +894,31 @@ export default {
       return this.map.height - (y * (n / this.info.mapSize) + this.map.oceanMargin)
     },
 
+/**
+ * Convert x coordinate in world to x coordinate in map image pixels
+ */
+worldToMapXGrids: function(x) {
+  if (!this.map || !this.info) return 0;
+  
+  // Normalize world coordinate to 0-1 range
+  const normalizedX = (x + this.info.mapSize / 2) / this.info.mapSize;
+  
+  // Convert to map image pixel coordinate
+  return normalizedX * (this.map.width - 2 * this.map.oceanMargin) + this.map.oceanMargin;
+},
+
+/**
+ * Convert y coordinate in world to y coordinate in map image pixels
+ */
+worldToMapYGrids: function(y) {
+  if (!this.map || !this.info) return 0;
+  
+  // Normalize world coordinate to 0-1 range (inverted for Y-axis)
+  const normalizedY = 1 - ((y + this.info.mapSize / 2) / this.info.mapSize);
+  
+  // Convert to map image pixel coordinate
+  return normalizedY * (this.map.height - 2 * this.map.oceanMargin) + this.map.oceanMargin;
+},
     /**
      * Convert width and height in pixel coordinates to a latlng bounds for the map
      */
@@ -891,7 +935,19 @@ export default {
       return new L.LatLngBounds(southWest, northEast);
 
     },
+    getLatLngBoundsFromWorldXYGrids: function(worldX, worldY) {
 
+      // get leaflet map object
+      var mapObject = this.$refs.map.mapObject;
+
+      // convert world coordinates to x,y on map image
+      var mapX = this.worldToMapXGrids(worldX);
+      var mapY = this.worldToMapYGrids(worldY);
+
+      // convert x,y to lat,lng for map
+      return mapObject.unproject([mapX, mapY], mapObject.getMaxZoom() - 3);
+
+    },
     /**
      * Convert x,y in world coordinates to a latlng bounds for the map
      */
@@ -912,6 +968,107 @@ export default {
     mapZoomUpdated(zoom) {
       this.mapZoom = zoom;
     },
+
+    /**
+     * Generate alphabetical grid labels (A-Z, then AA-ZZ)
+     */
+    generateGridLabel: function(index) {
+      if (index < 26) {
+        return String.fromCharCode(65 + index); // A-Z
+      } else {
+        const firstLetter = Math.floor((index - 26) / 26);
+        const secondLetter = (index - 26) % 26;
+        return String.fromCharCode(65 + firstLetter) + String.fromCharCode(65 + secondLetter); // AA-ZZ
+      }
+    },
+
+    /**
+     * Generate grid lines and labels for 150-meter squares
+     */
+/**
+ * Generate grid lines and labels for 150-meter squares
+ */
+
+generateGrid: function() {
+  if (!this.info || !this.map || !this.rustMapImageBounds) return;
+
+  const gridSize = 150; // 150 meters per grid square
+  const mapSize = this.info.mapSize;
+  const gridLines = [];
+  const gridLabels = [];
+
+  // Get leaflet map object
+  const mapObject = this.$refs.map.mapObject;
+  if (!mapObject) return;
+
+  // Use the same zoom level as the map image
+  const zoomLevel = mapObject.getMaxZoom() - 3;
+
+  // Calculate number of grids
+  const numGridsX = Math.ceil(mapSize / gridSize);
+  const numGridsY = Math.ceil(mapSize / gridSize);
+
+  // World coordinates range from -mapSize/2 to +mapSize/2
+  const worldMinX = -mapSize / 2;
+  const worldMaxX = mapSize / 2;
+  const worldMinY = -mapSize / 2;
+  const worldMaxY = mapSize / 2;
+
+  // Generate vertical grid lines (X-axis)
+  for (let i = 0; i <= numGridsX; i++) {
+    const worldX = worldMinX + (i * gridSize);
+    
+    if (worldX <= worldMaxX) {
+      const topPoint = this.getLatLngBoundsFromWorldXYGrids(worldX, worldMaxY);
+      const bottomPoint = this.getLatLngBoundsFromWorldXYGrids(worldX, worldMinY);
+      
+      gridLines.push({
+        points: [topPoint, bottomPoint]
+      });
+    }
+  }
+
+  // Generate horizontal grid lines (Y-axis)
+  for (let i = 0; i <= numGridsY; i++) {
+    const worldY = worldMaxY - (i * gridSize);
+    
+    if (worldY >= worldMinY) {
+      const leftPoint = this.getLatLngBoundsFromWorldXYGrids(worldMinX, worldY);
+      const rightPoint = this.getLatLngBoundsFromWorldXYGrids(worldMaxX, worldY);
+      
+      gridLines.push({
+        points: [leftPoint, rightPoint]
+      });
+    }
+  }
+
+  // Generate grid labels - positioned in top left corner with margin
+  for (let row = 0; row < numGridsY; row++) {
+    for (let col = 0; col < numGridsX; col++) {
+      // Calculate world coordinates for label position (top left corner of grid cell with margin)
+      const marginPercentage = 0.05; // 5% margin from edges
+      const marginX = gridSize * marginPercentage;
+      const marginY = gridSize * marginPercentage;
+      
+      const worldX = worldMinX + (col * gridSize) + marginX;
+      const worldY = worldMaxY - (row * gridSize) - marginY;
+      
+      if (worldX <= worldMaxX && worldY >= worldMinY) {
+        const labelPosition = this.getLatLngBoundsFromWorldXYGrids(worldX, worldY);
+        const colLabel = this.generateGridLabel(col);
+        const gridLabel = colLabel + row;
+        
+        gridLabels.push({
+          position: labelPosition,
+          text: gridLabel
+        });
+      }
+    }
+  }
+
+  this.gridLines = gridLines;
+  this.gridLabels = gridLabels;
+},
 
   },
   computed: {
@@ -971,6 +1128,10 @@ export default {
       // set status to none, so old server map is not shown
       this.status = 'none';
 
+      // clear existing data to prevent stale data display
+      this.gridLines = [];
+      this.gridLabels = [];
+
       // connect if server was updated
       if(this.server){
         this.connect();
@@ -1024,6 +1185,11 @@ export default {
           y: monument.y,
         };
 
+      });
+
+      // Generate grid after map is loaded and processed
+      this.$nextTick(() => {
+        this.generateGrid();
       });
 
     },
