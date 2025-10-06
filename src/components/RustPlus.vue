@@ -169,9 +169,25 @@
         </l-marker>
       </l-layer-group>
 
-      <!-- map markers: TravelingVendor=7 -->
-      <l-layer-group v-if="rustMapMarkers" layerType="overlay" name="Traveling Vendor">
+      <!-- map markers: GenericRadius=7 -->
+      <l-layer-group v-if="rustMapMarkers" layerType="overlay" name="Generic Radius">
         <l-marker v-if="mapMarker.type === 7" @click="onMapMarkerClick(mapMarker)" v-for="(mapMarker, index) in rustMapMarkers" :zIndexOffset="900" :lat-lng="getLatLngBoundsFromWorldXY(mapMarker.x, mapMarker.y)" :key="'map_marker:' + index">
+          <l-tooltip content="Generic Radius"/>
+          <l-icon :icon-size="[scaledIconSize, scaledIconSize]" icon-url="images/map/generic_radius.png"></l-icon>
+        </l-marker>
+      </l-layer-group>
+
+      <!-- map markers: PatrolHelicopter=8 -->
+      <l-layer-group v-if="rustMapMarkers" layerType="overlay" name="Patrol Helicopter">
+        <l-marker v-if="mapMarker.type === 8" @click="onMapMarkerClick(mapMarker)" v-for="(mapMarker, index) in rustMapMarkers" :zIndexOffset="900" :lat-lng="getLatLngBoundsFromWorldXY(mapMarker.x, mapMarker.y)" :key="'map_marker:' + index">
+          <l-tooltip content="Patrol Helicopter"/>
+          <l-icon :icon-size="[scaledIconSize, scaledIconSize]" icon-url="images/map/patrol_helicopter.png"></l-icon>
+        </l-marker>
+      </l-layer-group>
+
+      <!-- map markers: TravelingVendor=9 -->
+      <l-layer-group v-if="rustMapMarkers" layerType="overlay" name="Traveling Vendor">
+        <l-marker v-if="mapMarker.type === 9" @click="onMapMarkerClick(mapMarker)" v-for="(mapMarker, index) in rustMapMarkers" :zIndexOffset="900" :lat-lng="getLatLngBoundsFromWorldXY(mapMarker.x, mapMarker.y)" :key="'map_marker:' + index">
           <l-tooltip content="Traveling Vendor"/>
           <l-icon :icon-size="[scaledIconSize, scaledIconSize]" icon-url="images/map/traveling_vendor.png"></l-icon>
         </l-marker>
@@ -617,7 +633,7 @@ export default {
           
           // Debug: Check for traveling vendors specifically
           if(this.mapMarkers && this.mapMarkers.markers) {
-            const travelingVendors = this.mapMarkers.markers.filter(marker => marker.type === 7);
+            const travelingVendors = this.mapMarkers.markers.filter(marker => marker.type === 9);
             console.log('Traveling vendors found:', travelingVendors.length, travelingVendors);
           }
           
