@@ -26,6 +26,8 @@ Atlas is an **unofficial** interactive map experience for [Rust](https://rust.fa
     - Chinook
     - Explosions
     - Vending Machines
+    - Patrol Helicopters
+    - Traveling Vendors
     - Team Members
 - **Enhanced Grid System**
     - Dynamic grid overlay with 150m squares for accurate positioning
