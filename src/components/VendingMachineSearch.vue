@@ -35,6 +35,37 @@
           </div>
         </div>
 
+        <!-- Advanced Filters -->
+        <div class="grid grid-cols-2 gap-2 mb-3">
+          <!-- Sort By -->
+          <div>
+            <select
+              v-model="sortBy"
+              class="custom-select w-full bg-gray-700 border border-gray-600 text-white rounded-lg px-2 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200"
+            >
+              <option v-for="option in sortOptions" :key="option.value" :value="option.value">
+                {{ option.label }}
+              </option>
+            </select>
+          </div>
+
+          <!-- Hide Zero Stock Toggle -->
+          <div class="flex items-center">
+            <label class="flex items-center cursor-pointer text-sm text-gray-300 hover:text-white transition-colors duration-200">
+              <input
+                v-model="hideZeroStock"
+                type="checkbox"
+                class="sr-only"
+              />
+              <div class="relative">
+                <div class="block bg-gray-600 w-10 h-5 rounded-full transition-colors duration-200" :class="{ 'bg-blue-500': hideZeroStock }"></div>
+                <div class="dot absolute left-1 top-0.5 bg-white w-4 h-4 rounded-full transition-transform duration-200" :class="{ 'transform translate-x-5': hideZeroStock }"></div>
+              </div>
+              <span class="ml-2 text-xs">Hide 0 Stock</span>
+            </label>
+          </div>
+        </div>
+
         <!-- search -->
         <div class="flex-grow">
           <div class="relative">
@@ -183,6 +214,15 @@ export default {
       orderOptions: [
         { label: '🛒 Sell Orders (Items for Sale)', value: 'sell' },
         { label: '💰 Buy Orders (Items Wanted)', value: 'buy' }
+      ],
+      hideZeroStock: false,
+      sortBy: "name",
+      sortOptions: [
+        { label: '📝 Name A-Z', value: 'name' },
+        { label: '📊 Stock (High-Low)', value: 'stock_desc' },
+        { label: '📉 Stock (Low-High)', value: 'stock_asc' },
+        { label: '💰 Price (Low-High)', value: 'price_asc' },
+        { label: '💸 Price (High-Low)', value: 'price_desc' }
       ]
     };
   },
@@ -201,6 +241,11 @@ export default {
       this.$emit('show-vending-machine', vendingMachine);
     },
     shouldShowOrder(sellOrder) {
+      // Hide zero stock if filter is enabled
+      if (this.hideZeroStock && sellOrder.amountInStock === 0) {
+        return false;
+      }
+
       if (this.orderType === 'sell') {
         // Show if the item being sold matches the search
         return this.searchedItemIds.includes(sellOrder.itemId);
@@ -209,6 +254,43 @@ export default {
         return this.searchedItemIds.includes(sellOrder.currencyId);
       }
       return false;
+    },
+
+    /**
+     * Sorts vending machines based on the selected sort criteria.
+     */
+    sortVendingMachines(machines) {
+      if (!machines || !Array.isArray(machines) || machines.length === 0) return [];
+
+      return machines.slice().sort((a, b) => {
+        switch (this.sortBy) {
+          case 'name':
+            return a.name.localeCompare(b.name);
+          
+          case 'stock_desc':
+            const aMaxStock = Math.max(...a.sellOrders.map(order => order.amountInStock));
+            const bMaxStock = Math.max(...b.sellOrders.map(order => order.amountInStock));
+            return bMaxStock - aMaxStock;
+          
+          case 'stock_asc':
+            const aMinStock = Math.max(...a.sellOrders.map(order => order.amountInStock));
+            const bMinStock = Math.max(...b.sellOrders.map(order => order.amountInStock));
+            return aMinStock - bMinStock;
+          
+          case 'price_asc':
+            const aMinPrice = Math.min(...a.sellOrders.map(order => order.costPerItem));
+            const bMinPrice = Math.min(...b.sellOrders.map(order => order.costPerItem));
+            return aMinPrice - bMinPrice;
+          
+          case 'price_desc':
+            const aMaxPrice = Math.max(...a.sellOrders.map(order => order.costPerItem));
+            const bMaxPrice = Math.max(...b.sellOrders.map(order => order.costPerItem));
+            return bMaxPrice - aMaxPrice;
+          
+          default:
+            return 0;
+        }
+      });
     },
   },
   computed: {
@@ -228,33 +310,45 @@ export default {
      * Returns an array of vending machines that contain at least one item in the searchedItemIds array.
      */
     vendingMachinesWithSearchedItems: function() {
-      return this.vendingMachines ? this.vendingMachines.filter((vendingMachine) => {
+      let filteredMachines = this.vendingMachines && Array.isArray(this.vendingMachines) ? this.vendingMachines.filter((vendingMachine) => {
+        let hasVisibleOrders = false;
 
         if (this.orderType === 'sell') {
-          // Original logic: search for items being sold
-          var itemIdsForSale = vendingMachine.sellOrders.map((sellOrder) => sellOrder.itemId);
-
-          for(var i=0; i < itemIdsForSale.length; i++){
-            var itemIdForSale = itemIdsForSale[i];
-            if(this.searchedItemIds.includes(itemIdForSale)){
-              return true;
+          // Check for items being sold that match search and are visible (considering zero stock filter)
+          for(var i=0; i < vendingMachine.sellOrders.length; i++){
+            var sellOrder = vendingMachine.sellOrders[i];
+            
+            // Check if this order should be shown (matches search and passes zero stock filter)
+            if (this.searchedItemIds.includes(sellOrder.itemId)) {
+              // Apply zero stock filter check
+              if (!this.hideZeroStock || sellOrder.amountInStock > 0) {
+                hasVisibleOrders = true;
+                break;
+              }
             }
           }
         } else if (this.orderType === 'buy') {
-          // Buy orders logic: search for items being wanted (currencyId in sell orders)
-          var currencyIdsWanted = vendingMachine.sellOrders.map((sellOrder) => sellOrder.currencyId);
-
-          for(var i=0; i < currencyIdsWanted.length; i++){
-            var currencyIdWanted = currencyIdsWanted[i];
-            if(this.searchedItemIds.includes(currencyIdWanted)){
-              return true;
+          // Check for items being wanted (currencyId) that match search and are visible
+          for(var i=0; i < vendingMachine.sellOrders.length; i++){
+            var sellOrder = vendingMachine.sellOrders[i];
+            
+            // Check if this order should be shown (currency matches search and passes zero stock filter)
+            if (this.searchedItemIds.includes(sellOrder.currencyId)) {
+              // Apply zero stock filter check
+              if (!this.hideZeroStock || sellOrder.amountInStock > 0) {
+                hasVisibleOrders = true;
+                break;
+              }
             }
           }
         }
 
-        return false;
+        return hasVisibleOrders;
 
       }) : [];
+
+      // Apply sorting
+      return this.sortVendingMachines(filteredMachines);
     },
 
   }
