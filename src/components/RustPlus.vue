@@ -1172,12 +1172,12 @@ export default {
     // Return fixed icon size that doesn't change with zoom level
     scaledIconSize() {
       return this.baseIconSize;
+    },
+    rustVendingMachines: function () {
+      return this.rustMapMarkers ? this.rustMapMarkers.filter((mapMarker) => {
+        return mapMarker.type === 3; // VendingMachine=3
+      }) : [];
     }
-  },
-  rustVendingMachines: function () {
-    return this.rustMapMarkers ? this.rustMapMarkers.filter((mapMarker) => {
-      return mapMarker.type === 3; // VendingMachine=3
-    }) : [];
   },
   formattedGameTime: function () {
     if (!this.time) return null;
