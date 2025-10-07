@@ -147,7 +147,7 @@
           v-for="(mapMarker, index) in rustMapMarkers" :zIndexOffset="900"
           :lat-lng="getLatLngBoundsFromWorldXY(mapMarker.x, mapMarker.y)" :key="'map_marker:' + index">
           <l-tooltip :content="mapMarker.name" />
-          <l-icon :icon-size="[scaledIconSize, scaledIconSize]" icon-url="images/map/shop_green.png"></l-icon>
+          <l-icon :icon-size="[30, 30]" icon-url="images/map/shop_green.png"></l-icon>
         </l-marker>
       </l-layer-group>
 
@@ -181,7 +181,7 @@
           <l-tooltip content="Cargo Ship" />
           <l-icon :icon-size="scaledIconSize" class-name="scaled-marker">
             <img src="images/map/cargo_ship_body.png" :width="scaledIconSize" :height="scaledIconSize"
-              :style="{ transform: `rotate(${-mapMarker.rotation}deg) scale(${getScaleFactor()})` }" />
+              :style="{ transform: 'rotate(' + (-mapMarker.rotation) + 'deg)' }" />
           </l-icon>
         </l-marker>
       </l-layer-group>
@@ -199,7 +199,7 @@
       <!-- map markers: GenericRadius=7 -->
       <l-layer-group v-if="rustMapMarkers" layerType="overlay" name="Generic Radius">
         <l-marker v-if="mapMarker.type === 7" @click="onMapMarkerClick(mapMarker)"
-          v-for="(mapMarker, index) in rustMapMarkers" :zIndexOffset="900"
+          v-for="(mapMarker, index) in rustMapMarkers" :zIndexOffset="899"
           :lat-lng="getLatLngBoundsFromWorldXY(mapMarker.x, mapMarker.y)" :key="'map_marker:' + index">
           <l-tooltip content="Generic Radius" />
           <l-icon :icon-size="[scaledIconSize, scaledIconSize]" icon-url="images/map/generic_radius.png"></l-icon>
@@ -659,6 +659,9 @@ export default {
       // setup auto refresh
       this.autoRefreshTimer = setInterval(this.reload, 15000);
 
+      // setup dynamic marker refresh for CargoShip (4), CH47 (5), and PatrolHelicopter (8)
+      this.dynamicMarkerTimer = setInterval(this.refreshDynamicMarkers, 1000);
+
     },
     onDisconnected: function () {
 
@@ -832,6 +835,10 @@ export default {
         clearInterval(this.autoRefreshTimer);
       }
 
+      if (this.dynamicMarkerTimer) {
+        clearInterval(this.dynamicMarkerTimer);
+      }
+
       if (this.websocket) {
         this.websocket.close();
         this.websocket = null;
@@ -917,6 +924,36 @@ export default {
 
       });
 
+    },
+
+    refreshDynamicMarkers: function () {
+      // Only refresh markers if connected
+      if (this.status !== 'connected') {
+        return;
+      }
+
+      // Fetch only map markers for dynamic entities (CargoShip=4, CH47=5, PatrolHelicopter=8)
+      this.getMapMarkers((message) => {
+        // Only update coordinates for dynamic markers to avoid full re-render
+        if (message.response && message.response.mapMarkers && message.response.mapMarkers.markers) {
+          const newMarkers = message.response.mapMarkers.markers;
+          const dynamicTypes = [4, 5, 8]; // CargoShip, CH47, PatrolHelicopter
+          
+          // Update only coordinates for existing dynamic markers
+          if (this.rustMapMarkers) {
+            this.rustMapMarkers.forEach((existingMarker, index) => {
+              if (dynamicTypes.includes(existingMarker.type)) {
+                const newMarker = newMarkers.find(m => m.type === existingMarker.type && m.id === existingMarker.id);
+                if (newMarker) {
+                  // Update only position coordinates
+                  existingMarker.x = newMarker.x;
+                  existingMarker.y = newMarker.y;
+                }
+              }
+            });
+          }
+        }
+      });
     },
 
     getInfo: function (callback) {
