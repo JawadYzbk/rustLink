@@ -5,15 +5,17 @@
     <div class="flex-none flex bg-gray-700 p-2">
 
       <div class="flex-1 mx-2 text-white">
-        <div class="text-md font-bold">{{server.name}}</div>
+        <div class="text-md font-bold">{{ server.name }}</div>
         <div class="text-sm">
-          <span>{{server.ip}}:{{server.port}}</span>
-          <span v-if="info"> • Players: {{info.players}} / {{info.maxPlayers}}</span>
+          <span>{{ server.ip }}:{{ server.port }}</span>
+          <span v-if="info"> • Players: {{ info.players }} / {{ info.maxPlayers }}</span>
           <span v-if="info"> • Last Wiped: <timeago :datetime="info.wipeTime * 1000" :auto-update="60"></timeago></span>
-          <span v-if="formattedGameTime"> • Time: {{formattedGameTime}}</span>
+          <span v-if="formattedGameTime"> • Time: {{ formattedGameTime }}</span>
           <span v-if="time" class="inline-flex items-center">
             <svg v-if="isDayTime" class="w-4 h-4 ml-1 text-yellow-400" fill="currentColor" viewBox="0 0 20 20">
-              <path fill-rule="evenodd" d="M10 2a1 1 0 011 1v1a1 1 0 11-2 0V3a1 1 0 011-1zm4 8a4 4 0 11-8 0 4 4 0 018 0zm-.464 4.95l.707.707a1 1 0 001.414-1.414l-.707-.707a1 1 0 00-1.414 1.414zm2.12-10.607a1 1 0 010 1.414l-.706.707a1 1 0 11-1.414-1.414l.707-.707a1 1 0 011.414 0zM17 11a1 1 0 100-2h-1a1 1 0 100 2h1zm-7 4a1 1 0 011 1v1a1 1 0 11-2 0v-1a1 1 0 011-1zM5.05 6.464A1 1 0 106.465 5.05l-.708-.707a1 1 0 00-1.414 1.414l.707.707zm1.414 8.486l-.707.707a1 1 0 01-1.414-1.414l.707-.707a1 1 0 011.414 1.414zM4 11a1 1 0 100-2H3a1 1 0 000 2h1z" clip-rule="evenodd"></path>
+              <path fill-rule="evenodd"
+                d="M10 2a1 1 0 011 1v1a1 1 0 11-2 0V3a1 1 0 011-1zm4 8a4 4 0 11-8 0 4 4 0 018 0zm-.464 4.95l.707.707a1 1 0 001.414-1.414l-.707-.707a1 1 0 00-1.414 1.414zm2.12-10.607a1 1 0 010 1.414l-.706.707a1 1 0 11-1.414-1.414l.707-.707a1 1 0 011.414 0zM17 11a1 1 0 100-2h-1a1 1 0 100 2h1zm-7 4a1 1 0 011 1v1a1 1 0 11-2 0v-1a1 1 0 011-1zM5.05 6.464A1 1 0 106.465 5.05l-.708-.707a1 1 0 00-1.414 1.414l.707.707zm1.414 8.486l-.707.707a1 1 0 01-1.414-1.414l.707-.707a1 1 0 011.414 1.414zM4 11a1 1 0 100-2H3a1 1 0 000 2h1z"
+                clip-rule="evenodd"></path>
             </svg>
             <svg v-else class="w-4 h-4 ml-1 text-blue-300" fill="currentColor" viewBox="0 0 20 20">
               <path d="M17.293 13.293A8 8 0 016.707 2.707a8.001 8.001 0 1010.586 10.586z"></path>
@@ -25,34 +27,45 @@
       <div class="flex-none flex">
 
         <!-- vending machine search button -->
-        <button v-if="status !== 'none' || status !== 'error'" @click="showVendingMachineSearch" type="button" class="mr-2 my-auto inline-flex items-center px-3 py-2 border border-transparent shadow-sm text-sm leading-4 font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none">
-          <svg class="flex-none my-auto mr-2 w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+        <button v-if="status !== 'none' || status !== 'error'" @click="showVendingMachineSearch" type="button"
+          class="mr-2 my-auto inline-flex items-center px-3 py-2 border border-transparent shadow-sm text-sm leading-4 font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none">
+          <svg class="flex-none my-auto mr-2 w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"
+            xmlns="http://www.w3.org/2000/svg">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+              d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
           </svg>
           <span>Search Vending Machines</span>
         </button>
 
         <!-- refresh button -->
-        <button v-if="status === 'connected'" @click="reload" type="button" class="mr-2 my-auto inline-flex items-center px-3 py-2 border border-transparent shadow-sm text-sm leading-4 font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none">
+        <button v-if="status === 'connected'" @click="reload" type="button"
+          class="mr-2 my-auto inline-flex items-center px-3 py-2 border border-transparent shadow-sm text-sm leading-4 font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none">
           <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path>
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+              d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15">
+            </path>
           </svg>
         </button>
 
         <!-- connect button -->
-        <button v-if="status !== 'connected'" @click="connect" type="button" class="my-auto inline-flex items-center px-3 py-2 border border-transparent shadow-sm text-sm leading-4 font-medium rounded-md text-white bg-green-600 hover:bg-green-700 focus:outline-none">
+        <button v-if="status !== 'connected'" @click="connect" type="button"
+          class="my-auto inline-flex items-center px-3 py-2 border border-transparent shadow-sm text-sm leading-4 font-medium rounded-md text-white bg-green-600 hover:bg-green-700 focus:outline-none">
           Connect
         </button>
 
         <!-- disconnect button -->
-        <button v-if="status === 'connected'" @click="disconnect" type="button" class="my-auto inline-flex items-center px-3 py-2 border border-transparent shadow-sm text-sm leading-4 font-medium rounded-md text-white bg-red-600 hover:bg-red-700 focus:outline-none">
+        <button v-if="status === 'connected'" @click="disconnect" type="button"
+          class="my-auto inline-flex items-center px-3 py-2 border border-transparent shadow-sm text-sm leading-4 font-medium rounded-md text-white bg-red-600 hover:bg-red-700 focus:outline-none">
           Disconnect
         </button>
 
         <!-- remove server button -->
-        <button @click="removeServer" type="button" class="mx-2 my-auto inline-flex items-center px-3 py-2 border border-transparent shadow-sm text-sm leading-4 font-medium rounded-md text-white bg-red-600 hover:bg-red-700 focus:outline-none">
+        <button @click="removeServer" type="button"
+          class="mx-2 my-auto inline-flex items-center px-3 py-2 border border-transparent shadow-sm text-sm leading-4 font-medium rounded-md text-white bg-red-600 hover:bg-red-700 focus:outline-none">
           <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+              d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16">
+            </path>
           </svg>
         </button>
 
@@ -62,42 +75,36 @@
 
     <!-- server status -->
     <div v-if="status === 'none' || status === 'error'" class="flex-1">
-      <ServerNotConnected v-if="status === 'none'"/>
-      <ServerError v-if="status === 'error'" :error="error"/>
+      <ServerNotConnected v-if="status === 'none'" />
+      <ServerError v-if="status === 'error'" :error="error" />
     </div>
 
     <!-- map -->
-    <l-map
-        v-if="status !== 'none' && status !== 'error'"
-        ref="map"
-       :crs="mapCRS"
-       :zoom="mapZoom"
-       :min-zoom="mapMinZoom"
-       :max-zoom="mapMaxZoom"
-       :options="mapOptions"
-       @click="onMapClick"
-       @update:zoom="mapZoomUpdated"
-       class="flex-1"
-       v-bind:style="{ backgroundColor: rustMapImageColour }">
+    <l-map v-if="status !== 'none' && status !== 'error'" ref="map" :crs="mapCRS" :zoom="mapZoom" :min-zoom="mapMinZoom"
+      :max-zoom="mapMaxZoom" :options="mapOptions" @click="onMapClick" @update:zoom="mapZoomUpdated" class="flex-1"
+      v-bind:style="{ backgroundColor: rustMapImageColour }">
 
       <!-- layer controls -->
       <l-control-layers position="topright" :sortLayers="true"></l-control-layers>
 
       <!-- map image -->
-      <l-image-overlay v-if="rustMapImageUrl" :zIndexOffset="600" :url="rustMapImageUrl" :bounds="rustMapImageBounds"></l-image-overlay>
+      <l-image-overlay v-if="rustMapImageUrl" :zIndexOffset="600" :url="rustMapImageUrl"
+        :bounds="rustMapImageBounds"></l-image-overlay>
 
       <!-- monument names -->
       <l-layer-group v-if="rustMonuments" layerType="overlay" name="Monuments Names">
-        <l-marker v-for="(monument, index) in rustMonuments" :zIndexOffset="700" :lat-lng="getLatLngBoundsFromWorldXY(monument.x, monument.y)" :key="'monument:' + index">
+        <l-marker v-for="(monument, index) in rustMonuments" :zIndexOffset="700"
+          :lat-lng="getLatLngBoundsFromWorldXY(monument.x, monument.y)" :key="'monument:' + index">
           <l-icon class-name="rust-map-monument-text" :iconAnchor="[(5 + (2 * mapZoom)), 7]">
-            <span :style="{fontSize: (5 + (2 * mapZoom)) + 'px'}">{{monument.name}}</span>
+            <span :style="{ fontSize: (5 + (2 * mapZoom)) + 'px' }">{{ monument.name }}</span>
           </l-icon>
         </l-marker>
       </l-layer-group>
 
       <!-- team members -->
       <l-layer-group v-if="rustTeamMembers" layerType="overlay" name="Team Members">
-        <l-marker v-if="rustTeamMembers" v-for="(teamMember, index) in rustTeamMembers" :zIndexOffset="800" :lat-lng="getLatLngBoundsFromWorldXY(teamMember.x, teamMember.y)" :key="'team_member:' + index">
+        <l-marker v-if="rustTeamMembers" v-for="(teamMember, index) in rustTeamMembers" :zIndexOffset="800"
+          :lat-lng="getLatLngBoundsFromWorldXY(teamMember.x, teamMember.y)" :key="'team_member:' + index">
           <l-tooltip>
             <span>{{ teamMember.name }}</span>
             <span v-if="!teamMember.isOnline"> (Offline)</span>
@@ -105,47 +112,62 @@
             <span v-if="teamMember.isOnline && !teamMember.isAlive"> (Dead)</span>
           </l-tooltip>
           <l-icon>
-            <img :src="teamMember.avatarUrl" class="border-2" style="border-radius:50%;background-color:#000000;width:30px;height:30px" :class="{
-            'border-rust-team-member-offline': !teamMember.isOnline,
-            'border-rust-team-member-online': teamMember.isOnline && teamMember.isAlive,
-            'border-rust-team-member-dead': teamMember.isOnline && !teamMember.isAlive,
-          }">
+            <img :src="teamMember.avatarUrl" class="border-2"
+              style="border-radius:50%;background-color:#000000;width:30px;height:30px" :class="{
+                'border-rust-team-member-offline': !teamMember.isOnline,
+                'border-rust-team-member-online': teamMember.isOnline && teamMember.isAlive,
+                'border-rust-team-member-dead': teamMember.isOnline && !teamMember.isAlive,
+              }">
           </l-icon>
         </l-marker>
       </l-layer-group>
 
       <!-- map markers: Player=1 -->
       <l-layer-group v-if="rustMapMarkers" layerType="overlay" name="Player Markers">
-        <l-marker v-if="mapMarker.type === 1" @click="onMapMarkerClick(mapMarker)" v-for="(mapMarker, index) in rustMapMarkers" :zIndexOffset="900" :lat-lng="getLatLngBoundsFromWorldXY(mapMarker.x, mapMarker.y)" :key="'map_marker:' + index">
-          <l-tooltip content="Player Marker"/>
+        <l-marker v-if="mapMarker.type === 1" @click="onMapMarkerClick(mapMarker)"
+          v-for="(mapMarker, index) in rustMapMarkers" :zIndexOffset="900"
+          :lat-lng="getLatLngBoundsFromWorldXY(mapMarker.x, mapMarker.y)" :key="'map_marker:' + index">
+          <l-tooltip content="Player Marker" />
         </l-marker>
       </l-layer-group>
 
       <!-- map markers: Explosion=2 -->
       <l-layer-group v-if="rustMapMarkers" layerType="overlay" name="Explosions">
-        <l-marker v-if="mapMarker.type === 2" @click="onMapMarkerClick(mapMarker)" v-for="(mapMarker, index) in rustMapMarkers" :zIndexOffset="900" :lat-lng="getLatLngBoundsFromWorldXY(mapMarker.x, mapMarker.y)" :key="'map_marker:' + index">
-          <l-tooltip content="Explosion"/>
+        <l-marker v-if="mapMarker.type === 2" @click="onMapMarkerClick(mapMarker)"
+          v-for="(mapMarker, index) in rustMapMarkers" :zIndexOffset="900"
+          :lat-lng="getLatLngBoundsFromWorldXY(mapMarker.x, mapMarker.y)" :key="'map_marker:' + index">
+          <l-tooltip content="Explosion" />
           <l-icon :icon-size="[scaledIconSize, scaledIconSize]" icon-url="images/map/explosion_marker.png"></l-icon>
         </l-marker>
       </l-layer-group>
 
       <!-- map markers: VendingMachine=3 -->
       <l-layer-group v-if="rustMapMarkers" layerType="overlay" name="Vending Machines">
-        <l-marker v-if="mapMarker.type === 3" @click="onMapMarkerClick(mapMarker)" v-for="(mapMarker, index) in rustMapMarkers" :zIndexOffset="900" :lat-lng="getLatLngBoundsFromWorldXY(mapMarker.x, mapMarker.y)" :key="'map_marker:' + index">
-          <l-tooltip :content="mapMarker.name"/>
+        <l-marker v-if="mapMarker.type === 3" @click="onMapMarkerClick(mapMarker)"
+          v-for="(mapMarker, index) in rustMapMarkers" :zIndexOffset="900"
+          :lat-lng="getLatLngBoundsFromWorldXY(mapMarker.x, mapMarker.y)" :key="'map_marker:' + index">
+          <l-tooltip :content="mapMarker.name" />
           <l-icon :icon-size="[scaledIconSize, scaledIconSize]" icon-url="images/map/shop_green.png"></l-icon>
         </l-marker>
       </l-layer-group>
 
       <!-- map markers: CH47=4 -->
       <l-layer-group v-if="rustMapMarkers" layerType="overlay" name="Chinook">
-        <l-marker v-if="mapMarker.type === 4" @click="onMapMarkerClick(mapMarker)" v-for="(mapMarker, index) in rustMapMarkers" :zIndexOffset="900" :lat-lng="getLatLngBoundsFromWorldXY(mapMarker.x, mapMarker.y)" :key="'map_marker:' + index">
-          <l-tooltip content="CH47"/>
+        <l-marker v-if="mapMarker.type === 4" @click="onMapMarkerClick(mapMarker)"
+          v-for="(mapMarker, index) in rustMapMarkers" :zIndexOffset="900"
+          :lat-lng="getLatLngBoundsFromWorldXY(mapMarker.x, mapMarker.y)" :key="'map_marker:' + index">
+          <l-tooltip content="CH47" />
           <l-icon>
-            <div style="position:relative" :style="{ transform: 'rotate('+ (-mapMarker.rotation) +'deg)'}">
-              <img src="images/map/chinook_map_body.png" :width="scaledIconSize" :height="scaledIconSize"/>
-              <img src="images/map/chinook_map_blades.png" :width="scaledIconSize * 0.67" :height="scaledIconSize * 0.67" class="chinook-blade-spin-anticlockwise" :style="{ position: 'absolute', top: (-scaledIconSize * 0.17) + 'px', left: (scaledIconSize * 0.17) + 'px' }"/> <!-- anti clockwise rotation -->
-              <img src="images/map/chinook_map_blades.png" :width="scaledIconSize * 0.67" :height="scaledIconSize * 0.67" class="chinook-blade-spin-clockwise" :style="{ position: 'absolute', top: (scaledIconSize * 0.5) + 'px', left: (scaledIconSize * 0.17) + 'px' }"/> <!-- clockwise rotation -->
+            <div style="position:relative" :style="{ transform: 'rotate(' + (-mapMarker.rotation) + 'deg)' }">
+              <img src="images/map/chinook_map_body.png" :width="scaledIconSize" :height="scaledIconSize" />
+              <img src="images/map/chinook_map_blades.png" :width="scaledIconSize * 0.67"
+                :height="scaledIconSize * 0.67" class="chinook-blade-spin-anticlockwise"
+                :style="{ position: 'absolute', top: (-scaledIconSize * 0.25) + 'px', left: (scaledIconSize * 0.015) + 'px' }" />
+              <!-- anti clockwise rotation -->
+              <img src="images/map/chinook_map_blades.png" :width="scaledIconSize * 0.67"
+                :height="scaledIconSize * 0.67" class="chinook-blade-spin-clockwise"
+                :style="{ position: 'absolute', top: (scaledIconSize * 0.3) + 'px', left: (scaledIconSize * 0.015) + 'px' }" />
+              <!-- clockwise rotation -->
             </div>
           </l-icon>
         </l-marker>
@@ -153,56 +175,81 @@
 
       <!-- map markers: CargoShip=5 -->
       <l-layer-group v-if="rustMapMarkers" layerType="overlay" name="Cargo Ship">
-        <l-marker v-if="mapMarker.type === 5" @click="onMapMarkerClick(mapMarker)" v-for="(mapMarker, index) in rustMapMarkers" :zIndexOffset="900" :lat-lng="getLatLngBoundsFromWorldXY(mapMarker.x, mapMarker.y)" :key="'map_marker:' + index">
-          <l-tooltip content="Cargo Ship"/>
-          <l-icon>
-            <img src="images/map/cargo_ship_body.png" :width="scaledIconSize" :height="scaledIconSize" :style="{ transform: 'rotate('+ (-mapMarker.rotation) +'deg)'}"/>
+        <l-marker v-if="mapMarker.type === 5" @click="onMapMarkerClick(mapMarker)" 
+          v-for="(mapMarker, index) in rustMapMarkers" :zIndexOffset="900"
+          :lat-lng="getLatLngBoundsFromWorldXY(mapMarker.x, mapMarker.y)" :key="'map_marker:' + index">
+          <l-tooltip content="Cargo Ship" />
+          <l-icon :icon-size="scaledIconSize" class-name="scaled-marker">
+            <img src="images/map/cargo_ship_body.png" :width="scaledIconSize" :height="scaledIconSize"
+              :style="{ transform: `rotate(${-mapMarker.rotation}deg) scale(${getScaleFactor()})` }" />
           </l-icon>
         </l-marker>
       </l-layer-group>
 
       <!-- map markers: Crate=6 -->
       <l-layer-group v-if="rustMapMarkers" layerType="overlay" name="Locked Crates">
-        <l-marker v-if="mapMarker.type === 6" @click="onMapMarkerClick(mapMarker)" v-for="(mapMarker, index) in rustMapMarkers" :zIndexOffset="900" :lat-lng="getLatLngBoundsFromWorldXY(mapMarker.x, mapMarker.y)" :key="'map_marker:' + index">
-          <l-tooltip content="Locked Crate"/>
+        <l-marker v-if="mapMarker.type === 6" @click="onMapMarkerClick(mapMarker)"
+          v-for="(mapMarker, index) in rustMapMarkers" :zIndexOffset="900"
+          :lat-lng="getLatLngBoundsFromWorldXY(mapMarker.x, mapMarker.y)" :key="'map_marker:' + index">
+          <l-tooltip content="Locked Crate" />
           <l-icon :icon-size="[scaledIconSize, scaledIconSize]" icon-url="images/map/crate.png"></l-icon>
         </l-marker>
       </l-layer-group>
 
       <!-- map markers: GenericRadius=7 -->
       <l-layer-group v-if="rustMapMarkers" layerType="overlay" name="Generic Radius">
-        <l-marker v-if="mapMarker.type === 7" @click="onMapMarkerClick(mapMarker)" v-for="(mapMarker, index) in rustMapMarkers" :zIndexOffset="900" :lat-lng="getLatLngBoundsFromWorldXY(mapMarker.x, mapMarker.y)" :key="'map_marker:' + index">
-          <l-tooltip content="Generic Radius"/>
+        <l-marker v-if="mapMarker.type === 7" @click="onMapMarkerClick(mapMarker)"
+          v-for="(mapMarker, index) in rustMapMarkers" :zIndexOffset="900"
+          :lat-lng="getLatLngBoundsFromWorldXY(mapMarker.x, mapMarker.y)" :key="'map_marker:' + index">
+          <l-tooltip content="Generic Radius" />
           <l-icon :icon-size="[scaledIconSize, scaledIconSize]" icon-url="images/map/generic_radius.png"></l-icon>
         </l-marker>
       </l-layer-group>
 
       <!-- map markers: PatrolHelicopter=8 -->
       <l-layer-group v-if="rustMapMarkers" layerType="overlay" name="Patrol Helicopter">
-        <l-marker v-if="mapMarker.type === 8" @click="onMapMarkerClick(mapMarker)" v-for="(mapMarker, index) in rustMapMarkers" :zIndexOffset="900" :lat-lng="getLatLngBoundsFromWorldXY(mapMarker.x, mapMarker.y)" :key="'map_marker:' + index">
-          <l-tooltip content="Patrol Helicopter"/>
-          <l-icon :icon-size="[scaledIconSize, scaledIconSize]" icon-url="images/map/patrol_helicopter.png"></l-icon>
+        <l-marker v-if="mapMarker.type === 8"  @click="onMapMarkerClick(mapMarker)"
+          v-for="(mapMarker, index) in rustMapMarkers" :zIndexOffset="900"
+          :lat-lng="getLatLngBoundsFromWorldXY(mapMarker.x, mapMarker.y)" :key="'map_marker:' + index">
+          <l-tooltip content="Patrol Helicopter" />
+          <l-icon >
+            <div style="position:relative" :style="{ transform: 'rotate(' + (-mapMarker.rotation) + 'deg)' }">
+              <img src="images/map/patrol_helicopter.png" :width="scaledIconSize" :height="scaledIconSize" />
+              <img src="images/map/chinook_map_blades.png" :width="scaledIconSize * 0.67"
+                :height="scaledIconSize * 0.67" class="chinook-blade-spin-anticlockwise"
+                :style="{ position: 'absolute', top: (-scaledIconSize * 0.2) + 'px', left: (-scaledIconSize * 0.2) + 'px' }" />
+              <!-- anti clockwise rotation -->
+              
+            </div>
+              </l-icon>
         </l-marker>
       </l-layer-group>
 
       <!-- map markers: TravelingVendor=9 -->
       <l-layer-group v-if="rustMapMarkers" layerType="overlay" name="Traveling Vendor">
-        <l-marker v-if="mapMarker.type === 9" @click="onMapMarkerClick(mapMarker)" v-for="(mapMarker, index) in rustMapMarkers" :zIndexOffset="900" :lat-lng="getLatLngBoundsFromWorldXY(mapMarker.x, mapMarker.y)" :key="'map_marker:' + index">
-          <l-tooltip content="Traveling Vendor"/>
-          <l-icon :icon-size="[scaledIconSize, scaledIconSize]" icon-url="images/map/traveling_vendor.png"></l-icon>
+        <l-marker v-if="mapMarker.type === 9" @click="onMapMarkerClick(mapMarker)"
+          v-for="(mapMarker, index) in rustMapMarkers" :zIndexOffset="900"
+          :lat-lng="getLatLngBoundsFromWorldXY(mapMarker.x, mapMarker.y)" :key="'map_marker:' + index">
+          <l-tooltip content="Traveling Vendor" />
+          <l-icon :icon-size="[scaledIconSize, scaledIconSize]" icon-url="images/map/traveling_vendor.png"
+            :style="{ transform: 'rotate(' + (-mapMarker.rotation) + 'deg)' }"></l-icon>
         </l-marker>
       </l-layer-group>
 
       <!-- grid overlay -->
       <l-layer-group layerType="overlay" name="Grid Lines">
-        <l-polyline v-for="(line, index) in gridLines" :key="'grid-line:' + index" :lat-lngs="line.points" :color="'#000000'" :weight="0.5" :opacity="0.8" :interactive="false"></l-polyline>
+        <l-polyline v-for="(line, index) in gridLines" :key="'grid-line:' + index" :lat-lngs="line.points"
+          :color="'#000000'" :weight="0.5" :opacity="0.8" :interactive="false"></l-polyline>
       </l-layer-group>
 
       <!-- grid labels -->
       <l-layer-group v-if="mapZoom > mapMinZoom" layerType="overlay" name="Grid Labels">
-        <l-marker v-for="(label, index) in gridLabels" :key="'grid-label:' + index" :lat-lng="label.position" :zIndexOffset="1000" :interactive="false">
+        <l-marker v-for="(label, index) in gridLabels" :key="'grid-label:' + index" :lat-lng="label.position"
+          :zIndexOffset="1000" :interactive="false">
           <l-icon class-name="grid-label-text" :iconAnchor="[10, 10]">
-            <span class="grid-label" :style="{fontSize: (8 + mapZoom * 2) + 'px', color: 'black', fontWeight: 'normal', marginTop: (20 - mapZoom * 2) + 'px', marginBottom: (15 - mapZoom * 1.5) + 'px', padding: (12 - mapZoom * 1.5) + 'px'}">{{label.text}}</span>
+            <span class="grid-label"
+              :style="{ fontSize: (8 + mapZoom * 2) + 'px', color: 'black', fontWeight: 'normal', marginTop: (20 - mapZoom * 2) + 'px', marginBottom: (15 - mapZoom * 1.5) + 'px', padding: (12 - mapZoom * 1.5) + 'px' }">{{
+                label.text }}</span>
           </l-icon>
         </l-marker>
       </l-layer-group>
@@ -212,17 +259,22 @@
     </l-map>
 
     <!-- team members and team chat overlay -->
-    <div v-if="status !== 'none' || status !== 'error'" class="flex ml-4 absolute left-0 bottom-0 text-white" style="z-index:500;">
+    <div v-if="status !== 'none' || status !== 'error'" class="flex ml-4 absolute left-0 bottom-0 text-white"
+      style="z-index:500;">
 
       <!-- team chat -->
-      <div class="bg-white rounded-t text-white z-vending-machine-contents mr-4 bg-black-semi-transparent" style="width:400px;">
+      <div class="bg-white rounded-t text-white z-vending-machine-contents mr-4 bg-black-semi-transparent"
+        style="width:400px;">
 
         <!-- team chat header -->
         <div @click="isShowingTeamChat = !isShowingTeamChat" class="flex p-3 rounded-t bg-gray-600 cursor-pointer">
 
           <div class="flex mr-2 my-auto">
-            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">g
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"></path>
+            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"
+              xmlns="http://www.w3.org/2000/svg">g
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z">
+              </path>
             </svg>
           </div>
 
@@ -232,12 +284,14 @@
             <div class="mx-auto inline-flex items-center p-1 text-gray-300 focus:outline-none">
 
               <!-- chevron-down -->
-              <svg v-if="isShowingTeamChat" class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+              <svg v-if="isShowingTeamChat" class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"
+                xmlns="http://www.w3.org/2000/svg">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
               </svg>
 
               <!-- chevron-up -->
-              <svg v-if="!isShowingTeamChat" class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+              <svg v-if="!isShowingTeamChat" class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"
+                xmlns="http://www.w3.org/2000/svg">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 15l7-7 7 7"></path>
               </svg>
 
@@ -251,12 +305,15 @@
 
           <!-- team chat messages -->
           <div v-if="rustTeamChatMessages.length > 0" class="my-2 mx-auto">
-            <div v-for="teamChatMessage in rustTeamChatMessages" class="px-2 mb-1 flex rounded-md shadow-sm text-gray-800">
+            <div v-for="teamChatMessage in rustTeamChatMessages"
+              class="px-2 mb-1 flex rounded-md shadow-sm text-gray-800">
               <div v-if="teamChatMessage.steamId" class="flex-none mr-1">
-                <img class="rounded" :src="'https://companion-rust.facepunch.com/api/avatar/' + teamChatMessage.steamId" width="25" height="25"/>
+                <img class="rounded" :src="'https://companion-rust.facepunch.com/api/avatar/' + teamChatMessage.steamId"
+                  width="25" height="25" />
               </div>
               <div class="flex-grow">
-                <span v-if="teamChatMessage.name" class="mr-1" :style="{color: teamChatMessage.color}">{{ teamChatMessage.name }}:</span>
+                <span v-if="teamChatMessage.name" class="mr-1" :style="{ color: teamChatMessage.color }">{{
+                  teamChatMessage.name }}:</span>
                 <span class="text-white">{{ teamChatMessage.message }}</span>
               </div>
             </div>
@@ -265,8 +322,11 @@
           <!-- empty state -->
           <div v-else class="flex h-full">
             <div class="mx-auto my-auto">
-              <svg class="w-6 h-6 mx-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 13V6a2 2 0 00-2-2H6a2 2 0 00-2 2v7m16 0v5a2 2 0 01-2 2H6a2 2 0 01-2-2v-5m16 0h-2.586a1 1 0 00-.707.293l-2.414 2.414a1 1 0 01-.707.293h-3.172a1 1 0 01-.707-.293l-2.414-2.414A1 1 0 006.586 13H4"></path>
+              <svg class="w-6 h-6 mx-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24"
+                xmlns="http://www.w3.org/2000/svg">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                  d="M20 13V6a2 2 0 00-2-2H6a2 2 0 00-2 2v7m16 0v5a2 2 0 01-2 2H6a2 2 0 01-2-2v-5m16 0h-2.586a1 1 0 00-.707.293l-2.414 2.414a1 1 0 01-.707.293h-3.172a1 1 0 01-.707-.293l-2.414-2.414A1 1 0 006.586 13H4">
+                </path>
               </svg>
               <div>No Messages</div>
             </div>
@@ -277,10 +337,15 @@
         <!-- send message -->
         <div v-if="isShowingTeamChat" class="flex-grow py-2">
           <div class="relative rounded-md shadow-sm text-gray-800 px-2">
-            <input @keyup.enter="onSendTeamMessage" v-model="teamChatMessageText" type="text" class="focus:outline-none block w-full pr-8 sm:text-sm border-gray-300 rounded-md resize-none" placeholder="Send a message to Team Chat"/>
-            <div @click="onSendTeamMessage" class="absolute inset-y-0 right-0 pr-4 flex items-center cursor-pointer text-gray-400 hover:text-gray-500">
-              <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"></path>
+            <input @keyup.enter="onSendTeamMessage" v-model="teamChatMessageText" type="text"
+              class="focus:outline-none block w-full pr-8 sm:text-sm border-gray-300 rounded-md resize-none"
+              placeholder="Send a message to Team Chat" />
+            <div @click="onSendTeamMessage"
+              class="absolute inset-y-0 right-0 pr-4 flex items-center cursor-pointer text-gray-400 hover:text-gray-500">
+              <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"
+                xmlns="http://www.w3.org/2000/svg">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                  d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"></path>
               </svg>
             </div>
           </div>
@@ -291,24 +356,28 @@
       <!-- team members -->
       <div v-if="status !== 'none' || status !== 'error'" class="flex-grow">
         <div class="absolute bottom-0 pb-2">
-          <div v-if="rustTeamMembers.length > 0" v-for="teamMember in rustTeamMembers" class="flex text-lg mt-4 cursor-pointer" :class="{
-          'text-rust-team-member-offline': !teamMember.isOnline,
-          'text-rust-team-member-online': teamMember.isOnline && teamMember.isAlive,
-          'text-rust-team-member-dead': teamMember.isOnline && !teamMember.isAlive,
-        }" @click="$refs.map.mapObject.flyTo(getLatLngBoundsFromWorldXY(teamMember.x, teamMember.y), 3);">
+          <div v-if="rustTeamMembers.length > 0" v-for="teamMember in rustTeamMembers"
+            class="flex text-lg mt-4 cursor-pointer" :class="{
+              'text-rust-team-member-offline': !teamMember.isOnline,
+              'text-rust-team-member-online': teamMember.isOnline && teamMember.isAlive,
+              'text-rust-team-member-dead': teamMember.isOnline && !teamMember.isAlive,
+            }" @click="$refs.map.mapObject.flyTo(getLatLngBoundsFromWorldXY(teamMember.x, teamMember.y), 3);">
 
             <!-- offline -->
             <svg v-if="!teamMember.isOnline" class="my-auto w-3 h-3 mr-1" viewBox="0 0 24 24">
-              <path fill="currentColor" d="M12,2A10,10 0 0,0 2,12A10,10 0 0,0 12,22A10,10 0 0,0 22,12A10,10 0 0,0 12,2Z" />
+              <path fill="currentColor"
+                d="M12,2A10,10 0 0,0 2,12A10,10 0 0,0 12,22A10,10 0 0,0 22,12A10,10 0 0,0 12,2Z" />
             </svg>
 
             <!-- online: alive -->
             <svg v-if="teamMember.isOnline && teamMember.isAlive" class="my-auto w-3 h-3 mr-1" viewBox="0 0 24 24">
-              <path fill="currentColor" d="M12,2A10,10 0 0,0 2,12A10,10 0 0,0 12,22A10,10 0 0,0 22,12A10,10 0 0,0 12,2Z" />
+              <path fill="currentColor"
+                d="M12,2A10,10 0 0,0 2,12A10,10 0 0,0 12,22A10,10 0 0,0 22,12A10,10 0 0,0 12,2Z" />
             </svg>
 
             <!-- online: dead -->
-            <svg v-if="teamMember.isOnline && !teamMember.isAlive" class="my-auto w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+            <svg v-if="teamMember.isOnline && !teamMember.isAlive" class="my-auto w-4 h-4 mr-1" fill="none"
+              stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
             </svg>
 
@@ -323,16 +392,19 @@
 
     <!-- item search overlay -->
     <div v-if="status !== 'none' || status !== 'error'" class="px-4 absolute bottom-0 right-0" style="z-index:500;">
-      <VendingMachineSearch @close="isShowingVendingMachineSearch = false" @item-click="onItemClick" @show-vending-machine="$refs.map.mapObject.flyTo(getLatLngBoundsFromWorldXY($event.x, $event.y), 4);" :isShowing="isShowingVendingMachineSearch" :vending-machines="rustVendingMachines"/>
+      <VendingMachineSearch @close="isShowingVendingMachineSearch = false" @item-click="onItemClick"
+        @show-vending-machine="$refs.map.mapObject.flyTo(getLatLngBoundsFromWorldXY($event.x, $event.y), 4);"
+        :isShowing="isShowingVendingMachineSearch" :vending-machines="rustVendingMachines" />
     </div>
 
     <!-- vending machine overlay -->
     <div v-if="status !== 'none' || status !== 'error'" class="px-4 absolute bottom-0 right-0" style="z-index:500;">
-      <VendingMachineContents @close="selectedVendingMachine = null" @item-click="onItemClick" :vending-machine="selectedVendingMachine"/>
+      <VendingMachineContents @close="selectedVendingMachine = null" @item-click="onItemClick"
+        :vending-machine="selectedVendingMachine" />
     </div>
 
     <!-- modals -->
-    <ItemModal @close="isShowingItemModal = false" :isShowing="isShowingItemModal" :itemId="selectedItemId"/>
+    <ItemModal @close="isShowingItemModal = false" :isShowing="isShowingItemModal" :itemId="selectedItemId" />
 
   </div>
 </template>
@@ -365,14 +437,14 @@ export default {
   props: {
     server: Object,
   },
-  data: function() {
+  data: function () {
     return {
 
       status: "none",
       error: null,
 
       autoRefreshTimer: null,
-
+      baseIconSize: 40,
       /* map config */
       mapZoom: 1,
       mapMinZoom: 1,
@@ -447,23 +519,32 @@ export default {
     this.connect();
 
   },
-  beforeDestroy: function() {
+  beforeDestroy: function () {
     this.disconnect();
   },
   methods: {
-
-    scrollTeamChatToBottom: function() {
+    updateZoomLevel() {
+      const map = this.$refs.map?.mapObject;
+      if (map) {
+        this.currentZoom = map.getZoom();
+      }
+    },
+    getScaleFactor() {
+      // Adjust these values to get the right scaling behavior
+      return Math.max(0.3, 1 / Math.pow(1.3, this.currentZoom - 1));
+    },
+    scrollTeamChatToBottom: function () {
       var container = this.$el.querySelector("#team-chat-messages");
-      if(container){
+      if (container) {
         this.$nextTick(() => {
           container.scrollTop = container.scrollHeight;
         });
       }
     },
 
-    onSendTeamMessage: function() {
+    onSendTeamMessage: function () {
 
-      if(this.status !== 'connected'){
+      if (this.status !== 'connected') {
 
         // add error message to team chat messages and scroll to bottom
         this.rustTeamChatMessages.push({
@@ -482,7 +563,7 @@ export default {
       var messageToSend = this.teamChatMessageText;
 
       // make sure message is provided
-      if(messageToSend){
+      if (messageToSend) {
 
         // send team chat
         this.sendRequest({
@@ -491,13 +572,13 @@ export default {
           },
         }, (message) => {
 
-          if(message.response.success){
+          if (message.response.success) {
 
             // message was sent, and handled
             console.log(message);
             return true;
 
-          } else if(message.response.error && message.response.error.error === 'message_not_sent'){
+          } else if (message.response.error && message.response.error.error === 'message_not_sent') {
 
             // message was not sent, so put it back in ui
             this.teamChatMessageText = messageToSend;
@@ -528,41 +609,41 @@ export default {
 
     },
 
-    showVendingMachineSearch: function() {
+    showVendingMachineSearch: function () {
       this.selectedVendingMachine = null;
       this.isShowingVendingMachineSearch = true;
     },
 
-    onMapClick: function() {
+    onMapClick: function () {
       this.selectedVendingMachine = null;
       this.isShowingVendingMachineSearch = false;
     },
 
-    onItemClick: function(id) {
+    onItemClick: function (id) {
       this.selectedItemId = id;
       this.isShowingItemModal = true;
     },
 
-    onMapMarkerClick: function(mapMarker) {
+    onMapMarkerClick: function (mapMarker) {
 
       // vending machine clicked
-      if(mapMarker.type === 3){
+      if (mapMarker.type === 3) {
         this.selectedVendingMachine = mapMarker;
         this.isShowingVendingMachineSearch = false;
       }
 
     },
 
-    removeServer: function() {
+    removeServer: function () {
       this.$emit('remove-server', {
         id: this.server.id,
       });
     },
 
-    onConnecting: function() {
+    onConnecting: function () {
       this.status = "connecting";
     },
-    onConnected: function() {
+    onConnected: function () {
 
       // we are now connected
       this.status = "connected";
@@ -579,69 +660,69 @@ export default {
       this.autoRefreshTimer = setInterval(this.reload, 15000);
 
     },
-    onDisconnected: function() {
+    onDisconnected: function () {
 
       // don't update status to disconnected if in error state
-      if(this.status === 'error'){
+      if (this.status === 'error') {
         return;
       }
 
       this.status = "disconnected";
 
     },
-    onError: function(error) {
+    onError: function (error) {
       this.status = "error";
       this.error = error;
     },
 
-    onMessageReceived: function(message) {
+    onMessageReceived: function (message) {
 
-      if(message.response){
+      if (message.response) {
 
         // handle info response
-        if(message.response.info){
+        if (message.response.info) {
           this.info = message.response.info;
           console.log(this.info);
           return true;
         }
 
         // handle team info response
-        else if(message.response.teamInfo){
+        else if (message.response.teamInfo) {
           this.teamInfo = message.response.teamInfo;
           console.log(this.teamInfo);
           return true;
         }
 
         // handle team chat response
-        else if(message.response.teamChat){
+        else if (message.response.teamChat) {
           this.teamChat = message.response.teamChat;
           console.log(this.teamChat);
           return true;
         }
 
         // handle map response
-        else if(message.response.map){
+        else if (message.response.map) {
           this.map = message.response.map;
           console.log(this.map);
           return true;
         }
 
         // handle map markers response
-        else if(message.response.mapMarkers){
+        else if (message.response.mapMarkers) {
           this.mapMarkers = message.response.mapMarkers;
           console.log('Map markers received:', this.mapMarkers);
-          
+
           // Debug: Check for traveling vendors specifically
-          if(this.mapMarkers && this.mapMarkers.markers) {
+          if (this.mapMarkers && this.mapMarkers.markers) {
             const travelingVendors = this.mapMarkers.markers.filter(marker => marker.type === 9);
             console.log('Traveling vendors found:', travelingVendors.length, travelingVendors);
           }
-          
+
           return true;
         }
 
         // handle time response
-        else if(message.response.time){
+        else if (message.response.time) {
           this.time = message.response.time;
           console.log(this.time);
           return true;
@@ -652,9 +733,9 @@ export default {
           console.log(message);
         }
 
-      } else if(message.broadcast) {
+      } else if (message.broadcast) {
 
-        if(message.broadcast.teamMessage){
+        if (message.broadcast.teamMessage) {
 
           console.log(message);
 
@@ -662,7 +743,7 @@ export default {
           this.rustTeamChatMessages.push(message.broadcast.teamMessage.message);
           this.scrollTeamChatToBottom();
 
-        } else if(message.broadcast.teamChanged){
+        } else if (message.broadcast.teamChanged) {
 
           console.log(message);
 
@@ -687,11 +768,11 @@ export default {
 
     },
 
-    onMessageSent: function(message) {
+    onMessageSent: function (message) {
       // don't care
     },
 
-    connect: function() {
+    connect: function () {
 
       this.onConnecting();
 
@@ -699,7 +780,7 @@ export default {
       try {
         this.protocolVersion = 1601585622782;
         this.websocket = new WebSocket(`ws://${this.server.ip}:${this.server.port}?v=${this.protocolVersion}`);
-      } catch (error){
+      } catch (error) {
         this.onError(error);
         return;
       }
@@ -720,7 +801,7 @@ export default {
         var message = this.AppMessage.decode(new Uint8Array(event.data));
 
         // check if received message is a response and if we have a callback registered for it
-        if(message.response && message.response.seq && this.seqCallbacks[message.response.seq]){
+        if (message.response && message.response.seq && this.seqCallbacks[message.response.seq]) {
 
           // get the callback for the response sequence
           var callback = this.seqCallbacks[message.response.seq];
@@ -732,7 +813,7 @@ export default {
           delete this.seqCallbacks[message.response.seq];
 
           // if callback returns true, don't fire default message handler
-          if(result){
+          if (result) {
             return;
           }
 
@@ -745,13 +826,13 @@ export default {
 
     },
 
-    disconnect: function() {
+    disconnect: function () {
 
-      if(this.autoRefreshTimer){
+      if (this.autoRefreshTimer) {
         clearInterval(this.autoRefreshTimer);
       }
 
-      if(this.websocket){
+      if (this.websocket) {
         this.websocket.close();
         this.websocket = null;
       }
@@ -760,13 +841,13 @@ export default {
 
     },
 
-    sendRequest: function(data, callback) {
+    sendRequest: function (data, callback) {
 
       // increment sequence number
       let currentSeq = ++this.seq;
 
       // save callback if provided
-      if(callback){
+      if (callback) {
         this.seqCallbacks[currentSeq] = callback;
       }
 
@@ -778,7 +859,7 @@ export default {
       };
 
       // merge in request data
-      payload = {...payload, ...data};
+      payload = { ...payload, ...data };
 
       // create app request protobuf
       let message = this.AppRequest.fromObject(payload);
@@ -791,10 +872,10 @@ export default {
 
     },
 
-    reload: function() {
+    reload: function () {
 
       // make sure connected
-      if(this.status !== 'connected'){
+      if (this.status !== 'connected') {
         return;
       }
 
@@ -805,9 +886,9 @@ export default {
          * So we will disconnect from server, show an error to the user, and prevent any more
          * requests from being sent to the server.
          */
-        if(message.response && message.response.error){
+        if (message.response && message.response.error) {
           var appError = message.response.error;
-          if(appError.error === 'not_found'){
+          if (appError.error === 'not_found') {
 
             // disconnect from server
             this.disconnect();
@@ -828,9 +909,9 @@ export default {
         this.getMap(() => {
 
           // map must be loaded before markers and team info
-        this.getMapMarkers();
-        this.getTeamInfo();
-        this.getTime();
+          this.getMapMarkers();
+          this.getTeamInfo();
+          this.getTime();
 
         });
 
@@ -838,42 +919,42 @@ export default {
 
     },
 
-    getInfo: function(callback) {
+    getInfo: function (callback) {
       this.sendRequest({
         getInfo: {
 
         },
       }, callback);
     },
-    getMap: function(callback) {
+    getMap: function (callback) {
       this.sendRequest({
         getMap: {
 
         },
       }, callback);
     },
-    getMapMarkers: function(callback) {
+    getMapMarkers: function (callback) {
       this.sendRequest({
         getMapMarkers: {
 
         },
       }, callback);
     },
-    getTeamInfo: function(callback) {
+    getTeamInfo: function (callback) {
       this.sendRequest({
         getTeamInfo: {
 
         },
       }, callback);
     },
-    getTeamChat: function(callback) {
+    getTeamChat: function (callback) {
       this.sendRequest({
         getTeamChat: {
 
         },
       }, callback);
     },
-    getTime: function(callback) {
+    getTime: function (callback) {
       this.sendRequest({
         getTime: {
 
@@ -884,8 +965,8 @@ export default {
     /**
      * Create a blob uri to the received map image
      */
-    createMapUrl: function() {
-      if(this.map && this.map.jpgImage){
+    createMapUrl: function () {
+      if (this.map && this.map.jpgImage) {
         var blob = new Blob([this.map.jpgImage], {
           type: "image/jpeg",
         });
@@ -898,47 +979,47 @@ export default {
     /**
      * Convert x coordinate in world to x coordinate in map image pixels
      */
-    worldToMapX: function(x) {
+    worldToMapX: function (x) {
       return x * ((this.map.width - 2 * this.map.oceanMargin) / this.info.mapSize) + this.map.oceanMargin;
     },
 
     /**
      * Convert y coordinate in world to y coordinate in map image pixels
      */
-    worldToMapY: function(y) {
+    worldToMapY: function (y) {
       var n = this.map.height - 2 * this.map.oceanMargin;
       return this.map.height - (y * (n / this.info.mapSize) + this.map.oceanMargin)
     },
 
-/**
- * Convert x coordinate in world to x coordinate in map image pixels
- */
-worldToMapXGrids: function(x) {
-  if (!this.map || !this.info) return 0;
-  
-  // Normalize world coordinate to 0-1 range
-  const normalizedX = (x + this.info.mapSize / 2) / this.info.mapSize;
-  
-  // Convert to map image pixel coordinate
-  return normalizedX * (this.map.width - 2 * this.map.oceanMargin) + this.map.oceanMargin;
-},
+    /**
+     * Convert x coordinate in world to x coordinate in map image pixels
+     */
+    worldToMapXGrids: function (x) {
+      if (!this.map || !this.info) return 0;
 
-/**
- * Convert y coordinate in world to y coordinate in map image pixels
- */
-worldToMapYGrids: function(y) {
-  if (!this.map || !this.info) return 0;
-  
-  // Normalize world coordinate to 0-1 range (inverted for Y-axis)
-  const normalizedY = 1 - ((y + this.info.mapSize / 2) / this.info.mapSize);
-  
-  // Convert to map image pixel coordinate
-  return normalizedY * (this.map.height - 2 * this.map.oceanMargin) + this.map.oceanMargin;
-},
+      // Normalize world coordinate to 0-1 range
+      const normalizedX = (x + this.info.mapSize / 2) / this.info.mapSize;
+
+      // Convert to map image pixel coordinate
+      return normalizedX * (this.map.width - 2 * this.map.oceanMargin) + this.map.oceanMargin;
+    },
+
+    /**
+     * Convert y coordinate in world to y coordinate in map image pixels
+     */
+    worldToMapYGrids: function (y) {
+      if (!this.map || !this.info) return 0;
+
+      // Normalize world coordinate to 0-1 range (inverted for Y-axis)
+      const normalizedY = 1 - ((y + this.info.mapSize / 2) / this.info.mapSize);
+
+      // Convert to map image pixel coordinate
+      return normalizedY * (this.map.height - 2 * this.map.oceanMargin) + this.map.oceanMargin;
+    },
     /**
      * Convert width and height in pixel coordinates to a latlng bounds for the map
      */
-    getLatLngBoundsForMapImage: function(width, height) {
+    getLatLngBoundsForMapImage: function (width, height) {
 
       // get leaflet map object
       var mapObject = this.$refs.map.mapObject;
@@ -951,7 +1032,7 @@ worldToMapYGrids: function(y) {
       return new L.LatLngBounds(southWest, northEast);
 
     },
-    getLatLngBoundsFromWorldXYGrids: function(worldX, worldY) {
+    getLatLngBoundsFromWorldXYGrids: function (worldX, worldY) {
 
       // get leaflet map object
       var mapObject = this.$refs.map.mapObject;
@@ -967,7 +1048,7 @@ worldToMapYGrids: function(y) {
     /**
      * Convert x,y in world coordinates to a latlng bounds for the map
      */
-    getLatLngBoundsFromWorldXY: function(worldX, worldY) {
+    getLatLngBoundsFromWorldXY: function (worldX, worldY) {
 
       // get leaflet map object
       var mapObject = this.$refs.map.mapObject;
@@ -988,7 +1069,7 @@ worldToMapYGrids: function(y) {
     /**
      * Generate alphabetical grid labels (A-Z, then AA-ZZ)
      */
-    generateGridLabel: function(index) {
+    generateGridLabel: function (index) {
       if (index < 26) {
         return String.fromCharCode(65 + index); // A-Z
       } else {
@@ -1001,258 +1082,258 @@ worldToMapYGrids: function(y) {
     /**
      * Generate grid lines and labels for 150-meter squares
      */
-/**
- * Generate grid lines and labels for 150-meter squares
- */
+    /**
+     * Generate grid lines and labels for 150-meter squares
+     */
 
-generateGrid: function() {
-  if (!this.info || !this.map || !this.rustMapImageBounds) return;
+    generateGrid: function () {
+      if (!this.info || !this.map || !this.rustMapImageBounds) return;
 
-  const gridSize = 150; // 150 meters per grid square
-  const mapSize = this.info.mapSize;
-  const gridLines = [];
-  const gridLabels = [];
+      const gridSize = 150; // 150 meters per grid square
+      const mapSize = this.info.mapSize;
+      const gridLines = [];
+      const gridLabels = [];
 
-  // Get leaflet map object
-  const mapObject = this.$refs.map.mapObject;
-  if (!mapObject) return;
+      // Get leaflet map object
+      const mapObject = this.$refs.map.mapObject;
+      if (!mapObject) return;
 
-  // Use the same zoom level as the map image
-  const zoomLevel = mapObject.getMaxZoom() - 3;
+      // Use the same zoom level as the map image
+      const zoomLevel = mapObject.getMaxZoom() - 3;
 
-  // Calculate number of grids
-  const numGridsX = Math.ceil(mapSize / gridSize);
-  const numGridsY = Math.ceil(mapSize / gridSize);
+      // Calculate number of grids
+      const numGridsX = Math.ceil(mapSize / gridSize);
+      const numGridsY = Math.ceil(mapSize / gridSize);
 
-  // World coordinates range from -mapSize/2 to +mapSize/2
-  const worldMinX = -mapSize / 2;
-  const worldMaxX = mapSize / 2;
-  const worldMinY = -mapSize / 2;
-  const worldMaxY = mapSize / 2;
+      // World coordinates range from -mapSize/2 to +mapSize/2
+      const worldMinX = -mapSize / 2;
+      const worldMaxX = mapSize / 2;
+      const worldMinY = -mapSize / 2;
+      const worldMaxY = mapSize / 2;
 
-  // Generate vertical grid lines (X-axis)
-  for (let i = 0; i <= numGridsX; i++) {
-    const worldX = worldMinX + (i * gridSize);
-    
-    if (worldX <= worldMaxX) {
-      const topPoint = this.getLatLngBoundsFromWorldXYGrids(worldX, worldMaxY);
-      const bottomPoint = this.getLatLngBoundsFromWorldXYGrids(worldX, worldMinY);
-      
-      gridLines.push({
-        points: [topPoint, bottomPoint]
-      });
-    }
-  }
+      // Generate vertical grid lines (X-axis)
+      for (let i = 0; i <= numGridsX; i++) {
+        const worldX = worldMinX + (i * gridSize);
 
-  // Generate horizontal grid lines (Y-axis)
-  for (let i = 0; i <= numGridsY; i++) {
-    const worldY = worldMaxY - (i * gridSize);
-    
-    if (worldY >= worldMinY) {
-      const leftPoint = this.getLatLngBoundsFromWorldXYGrids(worldMinX, worldY);
-      const rightPoint = this.getLatLngBoundsFromWorldXYGrids(worldMaxX, worldY);
-      
-      gridLines.push({
-        points: [leftPoint, rightPoint]
-      });
-    }
-  }
+        if (worldX <= worldMaxX) {
+          const topPoint = this.getLatLngBoundsFromWorldXYGrids(worldX, worldMaxY);
+          const bottomPoint = this.getLatLngBoundsFromWorldXYGrids(worldX, worldMinY);
 
-  // Generate grid labels - positioned in top left corner with margin
-  for (let row = 0; row < numGridsY; row++) {
-    for (let col = 0; col < numGridsX; col++) {
-      // Calculate world coordinates for label position (top left corner of grid cell with margin)
-      const marginPercentage = 0.05; // 5% margin from edges
-      const marginX = gridSize * marginPercentage;
-      const marginY = gridSize * marginPercentage;
-      
-      const worldX = worldMinX + (col * gridSize) + marginX;
-      const worldY = worldMaxY - (row * gridSize) - marginY;
-      
-      if (worldX <= worldMaxX && worldY >= worldMinY) {
-        const labelPosition = this.getLatLngBoundsFromWorldXYGrids(worldX, worldY);
-        const colLabel = this.generateGridLabel(col);
-        const gridLabel = colLabel + row;
-        
-        gridLabels.push({
-          position: labelPosition,
-          text: gridLabel
-        });
+          gridLines.push({
+            points: [topPoint, bottomPoint]
+          });
+        }
       }
-    }
-  }
 
-  this.gridLines = gridLines;
-  this.gridLabels = gridLabels;
-},
+      // Generate horizontal grid lines (Y-axis)
+      for (let i = 0; i <= numGridsY; i++) {
+        const worldY = worldMaxY - (i * gridSize);
+
+        if (worldY >= worldMinY) {
+          const leftPoint = this.getLatLngBoundsFromWorldXYGrids(worldMinX, worldY);
+          const rightPoint = this.getLatLngBoundsFromWorldXYGrids(worldMaxX, worldY);
+
+          gridLines.push({
+            points: [leftPoint, rightPoint]
+          });
+        }
+      }
+
+      // Generate grid labels - positioned in top left corner with margin
+      for (let row = 0; row < numGridsY; row++) {
+        for (let col = 0; col < numGridsX; col++) {
+          // Calculate world coordinates for label position (top left corner of grid cell with margin)
+          const marginPercentage = 0.05; // 5% margin from edges
+          const marginX = gridSize * marginPercentage;
+          const marginY = gridSize * marginPercentage;
+
+          const worldX = worldMinX + (col * gridSize) + marginX;
+          const worldY = worldMaxY - (row * gridSize) - marginY;
+
+          if (worldX <= worldMaxX && worldY >= worldMinY) {
+            const labelPosition = this.getLatLngBoundsFromWorldXYGrids(worldX, worldY);
+            const colLabel = this.generateGridLabel(col);
+            const gridLabel = colLabel + row;
+
+            gridLabels.push({
+              position: labelPosition,
+              text: gridLabel
+            });
+          }
+        }
+      }
+
+      this.gridLines = gridLines;
+      this.gridLabels = gridLabels;
+    },
 
   },
   computed: {
     // Return fixed icon size that doesn't change with zoom level
-    scaledIconSize: function() {
-      return 30; // Fixed size regardless of zoom level
-    },
-    rustVendingMachines: function() {
-      return this.rustMapMarkers ? this.rustMapMarkers.filter((mapMarker) => {
-        return mapMarker.type === 3; // VendingMachine=3
-      }) : [];
-    },
-    formattedGameTime: function() {
-      if (!this.time) return null;
-      
-      // Convert time (0-24) to hours and minutes
-      const totalMinutes = this.time.time * 60;
-      const hours = Math.floor(totalMinutes / 60) % 24;
-      const minutes = Math.floor(totalMinutes % 60);
-      
-      // Format as HH:MM
-      const formattedHours = hours.toString().padStart(2, '0');
-      const formattedMinutes = minutes.toString().padStart(2, '0');
-      
-      return `${formattedHours}:${formattedMinutes}`;
-    },
-    isDayTime: function() {
-      if (!this.time) return true;
-      return this.time.time >= this.time.sunrise && this.time.time <= this.time.sunset;
-    },
+    scaledIconSize() {
+      return this.baseIconSize;
+    }
   },
-  watch: {
-    server: function() {
-
-      // disconnect from current server when new server is selected
-      this.disconnect();
-
-      // clear cached data
-      this.info = null;
-      this.teamInfo = null;
-      this.map = null;
-      this.mapMarkers = null;
-      this.time = null;
-
-      // clear processed rust data
-      this.rustMapImageUrl = null;
-      this.rustMapImageBounds = null;
-      this.rustMapImageColour = null;
-      this.rustMonuments = [];
-      this.rustMapMarkers = [];
-      this.rustTeamMembers = [];
-      this.rustTeamChatMessages = [];
-
-      // clear selected markers
-      this.selectedVendingMachine = null;
-
-      // set status to none, so old server map is not shown
-      this.status = 'none';
-
-      // clear existing data to prevent stale data display
-      this.gridLines = [];
-      this.gridLabels = [];
-
-      // connect if server was updated
-      if(this.server){
-        this.connect();
-      }
-
-    },
-    info: function() {
-
-      // make sure data exists
-      if(!this.info){
-        return;
-      }
-
-      // update server name in memory
-      this.server.name = this.info.name;
-
-      // update server
-      window.DataStore.Servers.addOrUpdateServer(this.server);
-
-    },
-    map: function() {
-
-      // make sure data exists
-      if(!this.map){
-        return;
-      }
-
-      // determine if we should center the map
-      var shouldCenterMap = this.rustMapImageBounds == null;
-
-      // update map data
-      this.rustMapImageColour = this.map.background;
-      this.rustMapImageBounds = this.getLatLngBoundsForMapImage(this.map.width, this.map.height);
-      this.rustMapImageUrl = this.createMapUrl();
-
-      // center the map
-      if(shouldCenterMap){
-        var mapObject = this.$refs.map.mapObject;
-        mapObject.fitBounds(this.rustMapImageBounds);
-      }
-
-      // update monuments
-      this.rustMonuments = this.map.monuments.map((monument) => {
-
-        // get monument name from lang
-        var name = this.lang["monument." + monument.token] || monument.token;
-
-        return {
-          name: name,
-          x: monument.x,
-          y: monument.y,
-        };
-
-      });
-
-      // Generate grid after map is loaded and processed
-      this.$nextTick(() => {
-        this.generateGrid();
-      });
-
-    },
-    mapMarkers: function() {
-
-      // make sure data exists
-      if(!this.mapMarkers){
-        return;
-      }
-
-      // update map markers
-      this.rustMapMarkers = this.mapMarkers.markers;
-
-    },
-    teamInfo: function() {
-
-      // make sure data exists
-      if(!this.teamInfo){
-        return;
-      }
-
-      // update team members
-      this.rustTeamMembers = this.teamInfo.members.map((teamMember) => {
-
-        return {
-          name: teamMember.name,
-          avatarUrl: 'https://companion-rust.facepunch.com/api/avatar/' + teamMember.steamId,
-          isOnline: teamMember.isOnline,
-          isAlive: teamMember.isAlive,
-          x: teamMember.x,
-          y: teamMember.y,
-        };
-
-      });
-
-    },
-    teamChat: function() {
-
-      // make sure data exists
-      if(!this.teamChat){
-        return;
-      }
-
-      // update team chat messages
-      this.rustTeamChatMessages = this.teamChat.messages;
-
-    },
+  rustVendingMachines: function () {
+    return this.rustMapMarkers ? this.rustMapMarkers.filter((mapMarker) => {
+      return mapMarker.type === 3; // VendingMachine=3
+    }) : [];
   },
+  formattedGameTime: function () {
+    if (!this.time) return null;
+
+    // Convert time (0-24) to hours and minutes
+    const totalMinutes = this.time.time * 60;
+    const hours = Math.floor(totalMinutes / 60) % 24;
+    const minutes = Math.floor(totalMinutes % 60);
+
+    // Format as HH:MM
+    const formattedHours = hours.toString().padStart(2, '0');
+    const formattedMinutes = minutes.toString().padStart(2, '0');
+
+    return `${formattedHours}:${formattedMinutes}`;
+  },
+  isDayTime: function () {
+    if (!this.time) return true;
+    return this.time.time >= this.time.sunrise && this.time.time <= this.time.sunset;
+  },
+watch: {
+  server: function() {
+
+    // disconnect from current server when new server is selected
+    this.disconnect();
+
+    // clear cached data
+    this.info = null;
+    this.teamInfo = null;
+    this.map = null;
+    this.mapMarkers = null;
+    this.time = null;
+
+    // clear processed rust data
+    this.rustMapImageUrl = null;
+    this.rustMapImageBounds = null;
+    this.rustMapImageColour = null;
+    this.rustMonuments = [];
+    this.rustMapMarkers = [];
+    this.rustTeamMembers = [];
+    this.rustTeamChatMessages = [];
+
+    // clear selected markers
+    this.selectedVendingMachine = null;
+
+    // set status to none, so old server map is not shown
+    this.status = 'none';
+
+    // clear existing data to prevent stale data display
+    this.gridLines = [];
+    this.gridLabels = [];
+
+    // connect if server was updated
+    if (this.server) {
+      this.connect();
+    }
+
+  },
+  info: function() {
+
+    // make sure data exists
+    if (!this.info) {
+      return;
+    }
+
+    // update server name in memory
+    this.server.name = this.info.name;
+
+    // update server
+    window.DataStore.Servers.addOrUpdateServer(this.server);
+
+  },
+  map: function() {
+
+    // make sure data exists
+    if (!this.map) {
+      return;
+    }
+
+    // determine if we should center the map
+    var shouldCenterMap = this.rustMapImageBounds == null;
+
+    // update map data
+    this.rustMapImageColour = this.map.background;
+    this.rustMapImageBounds = this.getLatLngBoundsForMapImage(this.map.width, this.map.height);
+    this.rustMapImageUrl = this.createMapUrl();
+
+    // center the map
+    if (shouldCenterMap) {
+      var mapObject = this.$refs.map.mapObject;
+      mapObject.fitBounds(this.rustMapImageBounds);
+    }
+
+    // update monuments
+    this.rustMonuments = this.map.monuments.map((monument) => {
+
+      // get monument name from lang
+      var name = this.lang["monument." + monument.token] || monument.token;
+
+      return {
+        name: name,
+        x: monument.x,
+        y: monument.y,
+      };
+
+    });
+
+    // Generate grid after map is loaded and processed
+    this.$nextTick(() => {
+      this.generateGrid();
+    });
+
+  },
+  mapMarkers: function() {
+
+    // make sure data exists
+    if (!this.mapMarkers) {
+      return;
+    }
+
+    // update map markers
+    this.rustMapMarkers = this.mapMarkers.markers;
+
+  },
+  teamInfo: function() {
+
+    // make sure data exists
+    if (!this.teamInfo) {
+      return;
+    }
+
+    // update team members
+    this.rustTeamMembers = this.teamInfo.members.map((teamMember) => {
+
+      return {
+        name: teamMember.name,
+        avatarUrl: 'https://companion-rust.facepunch.com/api/avatar/' + teamMember.steamId,
+        isOnline: teamMember.isOnline,
+        isAlive: teamMember.isAlive,
+        x: teamMember.x,
+        y: teamMember.y,
+      };
+
+    });
+
+  },
+  teamChat: function() {
+
+    // make sure data exists
+    if (!this.teamChat) {
+      return;
+    }
+
+    // update team chat messages
+    this.rustTeamChatMessages = this.teamChat.messages;
+
+  },
+},
 }
 </script>
