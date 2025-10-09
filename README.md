@@ -1,7 +1,7 @@
 <p align="center">
 <a href="https://github.com/jawadyazbek313/atlas-for-rust"><img src="./public/icon_rounded.png" width="150"></a>
     <br>
-<a href="https://github.com/liamcottle/atlas-for-rust">Big thanks for Liam cotelle for all his efforts developing the Base App</a>
+<a href="https://github.com/liamcottle/atlas-for-rust">Big thanks for Liam cottle for all his efforts developing the Base App</a>
     
 </p>
 
