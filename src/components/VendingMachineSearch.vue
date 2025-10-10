@@ -1,6 +1,6 @@
 <template>
   <Transition name="slide-up">
-    <div v-if="isShowing" class="bg-gray-900 rounded-lg text-white z-vending-machine-contents shadow-2xl border border-gray-700" style="width:350px;">
+    <div v-if="isShowing" class="bg-gray-900 rounded-lg text-white z-vending-machine-contents shadow-2xl border border-gray-700 z-999"  style="width:350px;">
 
       <!-- header -->
       <div class="flex flex-col p-4 bg-gradient-to-r from-gray-800 to-gray-700 rounded-t-lg">

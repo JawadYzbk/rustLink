@@ -95,7 +95,13 @@
       <l-layer-group v-if="rustMonuments" layerType="overlay" name="Monuments Names">
         <l-marker v-for="(monument, index) in rustMonuments" :zIndexOffset="700"
           :lat-lng="getLatLngBoundsFromWorldXY(monument.x, monument.y)" :key="'monument:' + index">
-          <l-icon class-name="rust-map-monument-text" :iconAnchor="[(5 + (2 * mapZoom)), 7]">
+          <l-icon
+          v-if="monument.name && monument.name.toLowerCase().includes('train tunnel')" 
+                  
+                  :icon-size="[24, 24]" 
+                  icon-url="images/assets_markers_train.png">
+          </l-icon>
+          <l-icon v-else class-name="rust-map-monument-text" :iconAnchor="[(5 + (2 * mapZoom)), 7]">
             <span :style="{ fontSize: (5 + (2 * mapZoom)) + 'px' }">{{ monument.name }}</span>
           </l-icon>
         </l-marker>
@@ -147,7 +153,8 @@
           v-for="(mapMarker, index) in rustMapMarkers" :zIndexOffset="900"
           :lat-lng="getLatLngBoundsFromWorldXY(mapMarker.x, mapMarker.y)" :key="'map_marker:' + index">
           <l-tooltip :content="mapMarker.name" />
-          <l-icon :icon-size="[30, 30]" icon-url="images/map/shop_green.png"></l-icon>
+          <l-icon :icon-size="[30, 30]" 
+                  :icon-url="getVendingMachineIcon(mapMarker)"></l-icon>
         </l-marker>
       </l-layer-group>
 
@@ -390,8 +397,104 @@
 
     </div>
 
+    <!-- event icons dock -->
+    <div v-if="status !== 'none' && status !== 'error'" 
+         class="absolute top-20 mt-12 right-3" 
+         style="z-index:400;">
+      
+      <!-- Unified Background Container -->
+      <div class="bg-gray-900 bg-opacity-90 rounded-lg p-3 border border-gray-600 shadow-xl backdrop-blur-sm">
+        <div class="flex flex-col space-y-2">
+          
+          <!-- helicopter icon -->
+          <div @click="activeHelicopter && $refs.map.mapObject.flyTo(getLatLngBoundsFromWorldXY(activeHelicopter.x, activeHelicopter.y), 4);"
+               :class="[
+                 'w-12 h-12 bg-white rounded-md flex items-center justify-center transition-all duration-200 relative overflow-hidden group shadow-md',
+                 activeHelicopter ? 'cursor-pointer hover:bg-gray-50' : 'opacity-50 cursor-not-allowed'
+               ]"
+               title="Patrol Helicopter">
+            <img src="/images/patrol_helicopter.png" alt="Patrol Helicopter" class="w-10 h-10 object-contain" />
+             <img src="images/map/chinook_map_blades.png" :width="scaledIconSize * 0.67"
+                :height="scaledIconSize * 0.67" :class="['', activeHelicopter ? 'chinook-blade-spin-anticlockwise' : '  ']"
+                :style="{ position: 'absolute', top: (-scaledIconSize * 0.01) + 'px', left: (scaledIconSize * 0.28) + 'px' }" />
+            <!-- Green pulse animation for active state only -->
+            <div v-if="activeHelicopter" class="absolute inset-0 bg-green-500 bg-opacity-20 rounded-md animate-pulse"></div>
+            <!-- Outer pulse border effect -->
+            <div v-if="activeHelicopter" class="absolute -inset-1 bg-green-400 bg-opacity-30 rounded-lg animate-pulse"></div>
+            <div :class="[
+              'absolute inset-0 rounded-md opacity-60 group-hover:opacity-100 transition-opacity duration-200',
+              activeHelicopter ? 'border-2 border-green-400 shadow-lg shadow-green-400/50' : 'border border-gray-400'
+            ]"></div>
+          </div>
+
+          <!-- cargo ship icon -->
+          <div @click="activeCargo && $refs.map.mapObject.flyTo(getLatLngBoundsFromWorldXY(activeCargo.x, activeCargo.y), 4);"
+               :class="[
+                 'w-12 h-12 bg-white rounded-md flex items-center justify-center transition-all duration-200 relative overflow-hidden group shadow-md',
+                 activeCargo ? 'cursor-pointer hover:bg-gray-50' : 'opacity-50 cursor-not-allowed'
+               ]"
+               title="Cargo Ship">
+            <img src="/images/cargo_ship_body.png" alt="Cargo Ship" class="w-10 h-10 object-contain" />
+            <!-- Green pulse animation for active state only -->
+            <div v-if="activeCargo" class="absolute inset-0 bg-green-500 bg-opacity-20 rounded-md animate-pulse"></div>
+            <!-- Outer pulse border effect -->
+            <div v-if="activeCargo" class="absolute -inset-1 bg-green-400 bg-opacity-30 rounded-lg animate-pulse"></div>
+            <div :class="[
+              'absolute inset-0 rounded-md opacity-60 group-hover:opacity-100 transition-opacity duration-200',
+              activeCargo ? 'border-2 border-green-400 shadow-lg shadow-green-400/50' : 'border border-gray-400'
+            ]"></div>
+          </div>
+
+          <!-- CH47 (Chinook) icon -->
+          <div @click="activeCH47 && $refs.map.mapObject.flyTo(getLatLngBoundsFromWorldXY(activeCH47.x, activeCH47.y), 4);"
+               :class="[
+                 'w-12 h-12 bg-white rounded-md flex items-center justify-center transition-all duration-200 relative overflow-hidden group shadow-md',
+                 activeCH47 ? 'cursor-pointer hover:bg-gray-50' : 'opacity-50 cursor-not-allowed'
+               ]"
+               title="CH47 Chinook">
+              <img src="images/map/chinook_map_body.png" :width="scaledIconSize" :height="scaledIconSize" />
+              <img src="images/map/chinook_map_blades.png" :width="scaledIconSize * 0.67"
+                :height="scaledIconSize * 0.67" :class="['', activeCH47 ? 'chinook-blade-spin-anticlockwise' : '  ']"
+                :style="{ position: 'absolute', top: (-scaledIconSize * 0.005) + 'px', left: (scaledIconSize * 0.25) + 'px' }" />
+              <!-- anti clockwise rotation -->
+              <img src="images/map/chinook_map_blades.png" :width="scaledIconSize * 0.67"
+                :height="scaledIconSize * 0.67" :class="['', activeCH47 ? 'chinook-blade-spin-anticlockwise' : '  ']"
+                :style="{ position: 'absolute', top: (scaledIconSize * 0.45) + 'px', left: (scaledIconSize * 0.25) + 'px' }" />
+              <!-- clockwise rotation -->
+              <!-- Green pulse animation for active state only -->
+            <div v-if="activeCH47" class="absolute inset-0 bg-green-500 bg-opacity-20 rounded-md animate-pulse"></div>
+            <!-- Outer pulse border effect -->
+            <div v-if="activeCH47" class="absolute -inset-1 bg-green-400 bg-opacity-30 rounded-lg animate-pulse"></div>
+            <div :class="[
+              'absolute inset-0 rounded-md opacity-60 group-hover:opacity-100 transition-opacity duration-200',
+              activeCH47 ? 'border-2 border-green-400 shadow-lg shadow-green-400/50' : 'border border-gray-400'
+            ]"></div>
+          </div>
+
+          <!-- traveling vendor icon -->
+          <div @click="activeTravelingVendor && $refs.map.mapObject.flyTo(getLatLngBoundsFromWorldXY(activeTravelingVendor.x, activeTravelingVendor.y), 4);"
+               :class="[
+                 'w-12 h-12 bg-white rounded-md flex items-center justify-center transition-all duration-200 relative overflow-hidden group shadow-md',
+                 activeTravelingVendor ? 'cursor-pointer hover:bg-gray-50' : 'opacity-50 cursor-not-allowed'
+               ]"
+               title="Traveling Vendor">
+            <img src="/images/map/traveling_vendor.png" alt="Traveling Vendor" class="w-10 h-10 object-contain" />
+            <!-- Green pulse animation for active state only -->
+            <div v-if="activeTravelingVendor" class="absolute inset-0 bg-green-500 bg-opacity-20 rounded-md animate-pulse"></div>
+            <!-- Outer pulse border effect -->
+            <div v-if="activeTravelingVendor" class="absolute -inset-1 bg-green-400 bg-opacity-30 rounded-lg animate-pulse"></div>
+            <div :class="[
+              'absolute inset-0 rounded-md opacity-60 group-hover:opacity-100 transition-opacity duration-200',
+              activeTravelingVendor ? 'border-2 border-green-400 shadow-lg shadow-green-400/50' : 'border border-gray-400'
+            ]"></div>
+          </div>
+          
+        </div>
+      </div>
+    </div>
+
     <!-- item search overlay -->
-    <div v-if="status !== 'none' || status !== 'error'" class="px-4 absolute bottom-0 right-0" style="z-index:500;">
+    <div v-if="status !== 'none' || status !== 'error'" class="px-4 absolute bottom-0 right-0" style="z-index:999;">
       <VendingMachineSearch @close="isShowingVendingMachineSearch = false" @item-click="onItemClick"
         @show-vending-machine="$refs.map.mapObject.flyTo(getLatLngBoundsFromWorldXY($event.x, $event.y), 4);"
         :isShowing="isShowingVendingMachineSearch" :vending-machines="rustVendingMachines" />
@@ -523,6 +626,21 @@ export default {
     this.disconnect();
   },
   methods: {
+    getVendingMachineIcon(mapMarker) {
+      // Check if the vending machine has sell orders and stock
+      if (!mapMarker.sellOrders || mapMarker.sellOrders.length === 0) {
+        return 'images/map/shop_orange.png';
+      }
+      
+      // Check if all sell orders have zero stock
+      const hasStock = mapMarker.sellOrders.some(order => order.amountInStock > 0);
+      
+      if (!hasStock) {
+        return 'images/map/shop_orange.png';
+      }
+      
+      return 'images/map/shop_green.png';
+    },
     updateZoomLevel() {
       const map = this.$refs.map?.mapObject;
       if (map) {
@@ -660,7 +778,7 @@ export default {
       this.autoRefreshTimer = setInterval(this.reload, 15000);
 
       // setup dynamic marker refresh for CargoShip (4), CH47 (5), and PatrolHelicopter (8)
-      this.dynamicMarkerTimer = setInterval(this.refreshDynamicMarkers, 1000);
+      this.dynamicMarkerTimer = setInterval(this.refreshDynamicMarkers, 5000);
 
     },
     onDisconnected: function () {
@@ -1214,6 +1332,30 @@ export default {
       return this.rustMapMarkers ? this.rustMapMarkers.filter((mapMarker) => {
         return mapMarker.type === 3; // VendingMachine=3
       }) : [];
+    },
+    // Active events tracking
+    activeHelicopter: function () {
+      return this.rustMapMarkers ? this.rustMapMarkers.find((mapMarker) => {
+        return mapMarker.type === 8; // PatrolHelicopter=8
+      }) : null;
+    },
+    activeCargo: function () {
+      return this.rustMapMarkers ? this.rustMapMarkers.find((mapMarker) => {
+        return mapMarker.type === 5; // CargoShip=5
+      }) : null;
+    },
+    activeCH47: function () {
+      return this.rustMapMarkers ? this.rustMapMarkers.find((mapMarker) => {
+        return mapMarker.type === 4; // CH47=4
+      }) : null;
+    },
+    activeTravelingVendor: function () {
+      return this.rustMapMarkers ? this.rustMapMarkers.find((mapMarker) => {
+        return mapMarker.type === 9; // TravelingVendor=9
+      }) : null;
+    },
+    hasActiveEvents: function () {
+      return this.activeHelicopter || this.activeCargo || this.activeCH47 || this.activeTravelingVendor;
     }
   },
   formattedGameTime: function () {
@@ -1308,18 +1450,23 @@ watch: {
     }
 
     // update monuments
-    this.rustMonuments = this.map.monuments.map((monument) => {
+    this.rustMonuments = this.map.monuments
+      .map((monument) => {
 
-      // get monument name from lang
-      var name = this.lang["monument." + monument.token] || monument.token;
+        // get monument name from lang
+        var name = this.lang["monument." + monument.token] || monument.token;
 
-      return {
-        name: name,
-        x: monument.x,
-        y: monument.y,
-      };
+        return {
+          name: name,
+          x: monument.x,
+          y: monument.y,
+        };
 
-    });
+      })
+      .filter((monument) => {
+        // hide monuments with names longer than 25 characters
+        return monument.name.length <= 25;
+      });
 
     // Generate grid after map is loaded and processed
     this.$nextTick(() => {
@@ -1374,3 +1521,6 @@ watch: {
 },
 }
 </script>
+
+<style scoped>
+</style>
