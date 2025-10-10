@@ -1,16 +1,11 @@
 <p align="center">
-<a href="https://github.com/liamcottle/atlas-for-rust"><img src="./public/icon_rounded.png" width="150"></a>
+<a href="https://github.com/jawadyazbek313/atlas-for-rust"><img src="./public/icon_rounded.png" width="150"></a>
+    <br>
+<a href="https://github.com/liamcottle/atlas-for-rust">Big thanks for Liam cottle for all his efforts developing the Base App</a>
+    
 </p>
 
-<h2 align="center">Atlas for Rust</h2>
-
-<p align="center">
-<a href="https://discord.gg/APQSQZNV7t"><img src="https://img.shields.io/badge/Discord-Liam%20Cottle's%20Discord-%237289DA?style=flat&logo=discord" alt="discord"/></a>
-<a href="https://twitter.com/liamcottle"><img src="https://img.shields.io/badge/Twitter-@liamcottle-%231DA1F2?style=flat&logo=twitter" alt="twitter"/></a>
-<br/>
-<a href="https://ko-fi.com/liamcottle"><img src="https://img.shields.io/badge/Donate%20a%20Coffee-liamcottle-yellow?style=flat&logo=buy-me-a-coffee" alt="donate on ko-fi"/></a>
-<a href="./donate.md"><img src="https://img.shields.io/badge/Donate%20Bitcoin-bc1qy22smke8n4c54evdxmp7lpy9p0e6m9tavtlg2q-%23FF9900?style=flat&logo=bitcoin" alt="donate bitcoin"/></a>
-</p>
+<h2 align="center">Atlas for Rust (Rust+ Unofficial alternative for PC )</h2>
 
 ## What is Atlas
 
