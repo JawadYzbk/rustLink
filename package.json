@@ -1,8 +1,8 @@
 {
-  "name": "@liamcottle/atlas-for-rust",
-  "description": "Atlas for Rust",
-  "version": "1.1.0",
-  "author": "Liam Cottle",
+  "name": "@jawadyazbek313/atlas-for-rust",
+  "description": "Atlas Rust+ Alternative for PC",
+  "version": "1.1.8",
+  "author": "Liam Cottle/Jawad Yazbek",
   "private": true,
   "main": "background.js",
   "scripts": {
