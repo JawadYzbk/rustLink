@@ -1,5 +1,5 @@
 <p align="center">
-<a href="https://github.com/jawadyazbek313/atlas-for-rust"><img src="./public/icon_rounded.png" width="150"></a>
+<a href="https://github.com/JawadYzbk/atlas-for-rust"><img src="./public/icon_rounded.png" width="150"></a>
     <br>
 <a href="https://github.com/liamcottle/atlas-for-rust">Big thanks for Liam cottle for all his efforts developing the Base App</a>
     
@@ -88,7 +88,7 @@ Atlas is an **unofficial** interactive map experience for [Rust](https://rust.fa
 
 ## How to Install
 
-- Download the latest installer from [Releases](https://github.com/jawadyazbek313/atlas-for-rust/releases)
+- Download the latest installer from [Releases](https://github.com/JawadYzbk/atlas-for-rust/releases)
 - After downloading, run `AtlasForRust-x.y.z-win.exe`
 - Connect with Rust+ from the Atlas welcome screen
 - Pair with your Rust server from the in game menu
@@ -98,7 +98,7 @@ Atlas is an **unofficial** interactive map experience for [Rust](https://rust.fa
 Download and Install Dependencies
 
 ```
-git clone https://github.com/jawadyazbek313/atlas-for-rust.gith
+git clone https://github.com/JawadYzbk/atlas-for-rust.gith
 cd atlas-for-rust
 npm install
 ```
