@@ -64,10 +64,12 @@ app.on('ready', () => {
 
     let window = new BrowserWindow({
         width: 1200, height: 800,
+        autoHideMenuBar: !process.env.WEBPACK_DEV_SERVER_URL, // hide menu bar in production
         webPreferences: {
             enableRemoteModule: true, // get version in about modal
             contextIsolation: false, // required for preload to work in browser
-            preload: __dirname + '/preload.js'
+            preload: __dirname + '/preload.js',
+            devTools: !!process.env.WEBPACK_DEV_SERVER_URL // disable dev tools in production
         },
     });
 

@@ -14,7 +14,7 @@
           <div>
             <div class="mt-3 text-center sm:mt-5">
 
-              <h3 class="text-lg leading-6 font-medium text-gray-900" id="modal-headline">Atlas for Rust</h3>
+              <h3 class="text-lg leading-6 font-medium text-gray-900" id="modal-headline">RustLink</h3>
               <h4 class="text-md leading-6 text-gray-500 mb-4">v{{ version }}</h4>
 
               <div class="flex flex-col w-full mt-2">
@@ -26,26 +26,22 @@
                       <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"></path>
                     </svg>
                   </div>
-                  <div>by Liam Cottle</div>
+                  <div>by Jawad Yzbk</div>
                 </div>
 
+               
+              
                 <p class="text-sm text-gray-500">
-                  Twitter: <a class="hover:text-gray-700" target="_blank" href="https://twitter.com/liamcottle">@liamcottle</a>
-                </p>
-                <p class="text-sm text-gray-500">
-                  Discord: <a class="hover:text-gray-700" target="_blank" href="https://discord.gg/APQSQZNV7t">Liam Cottle#0001</a>
-                </p>
-                <p class="text-sm text-gray-500">
-                  Email: <a class="hover:text-gray-700" target="_blank" href="mailto:liam@liamcottle.com">liam@liamcottle.com</a>
+                  Email: <a class="hover:text-gray-700" target="_blank" href="mailto:jawadyazbek@gmail.com">jawadyazbek@gmail.com</a>
                 </p>
                 <p class="text-sm text-gray-500 mb-4">
-                  Website: <a class="hover:text-gray-700" target="_blank" href="https://liamcottle.com">https://liamcottle.com</a>
+                  Website: <a class="hover:text-gray-700" target="_blank" href="https://github.com/JawadYzbk">https://github.com/JawadYzbk</a>
                 </p>
 
                 <div class="text-sm text-gray-500">
                   <div class="font-bold">Have a feature request?</div>
                   <div>
-                    <a class="underline hover:text-gray-700" target="_blank" href="https://github.com/liamcottle/atlas-for-rust">Open an Issue on GitHub</a>
+                    <a class="underline hover:text-gray-700" target="_blank" href="https://github.com/JawadYzbk/atlas-for-rust">Open an Issue on GitHub</a>
                   </div>
                 </div>
               </div>

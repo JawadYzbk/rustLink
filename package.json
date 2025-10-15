@@ -1,6 +1,6 @@
 {
-  "name": "@jawadyazbek313/atlas-for-rust",
-  "description": "Atlas Rust+ Alternative for PC",
+  "name": "@jawadyzbk/rustlink",
+  "description": "RustLink (Unofficial native Rust+ for PC)",
   "version": "1.1.8",
   "author": "Liam Cottle/Jawad Yazbek",
   "private": true,

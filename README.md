@@ -1,15 +1,15 @@
 <p align="center">
-<a href="https://github.com/jawadyazbek313/atlas-for-rust"><img src="./public/icon_rounded.png" width="150"></a>
+<a href="https://github.com/jawadyzbk/atlas-for-rust"><img src="./public/icon_rounded.png" width="150"></a>
     <br>
 <a href="https://github.com/liamcottle/atlas-for-rust">Big thanks for Liam cottle for all his efforts developing the Base App</a>
     
 </p>
 
-<h2 align="center">Atlas for Rust (Rust+ Unofficial alternative for PC )</h2>
+<h2 align="center">RustLink (Rust+ Unofficial alternative for PC )</h2>
 
-## What is Atlas
+## What is RustLink
 
-Atlas is an **unofficial** interactive map experience for [Rust](https://rust.facepunch.com/). It uses the same websocket protocol that the official [Rust+ Companion app](https://rust.facepunch.com/companion) uses to communicate with the Rust game servers.
+RustLink is an **unofficial** interactive map experience for [Rust](https://rust.facepunch.com/). It uses the same websocket protocol that the official [Rust+ Companion app](https://rust.facepunch.com/companion) uses to communicate with the Rust game servers.
 
 <img src="./docs/map.png">
 
@@ -83,13 +83,13 @@ Atlas is an **unofficial** interactive map experience for [Rust](https://rust.fa
     - Pair with Smart Devices
     - View list of Smart Devices per server
     - User could place custom markers on map showing where Smart Alarms are triggered
-- Atlas Auto Updater, currently users will need to update manually from GitHub releases
+- RustLink Auto Updater, currently users will need to update manually from GitHub releases
 
 ## How to Install
 
-- Download the latest installer from [Releases](https://github.com/jawadyazbek313/atlas-for-rust/releases)
-- After downloading, run `AtlasForRust-x.y.z-win.exe`
-- Connect with Rust+ from the Atlas welcome screen
+- Download the latest installer from [Releases](https://github.com/jawadyzbk/atlas-for-rust/releases)
+- After downloading, run `RustLink-x.y.z-win.exe`
+- Connect with Rust+ from the RustLink welcome screen
 - Pair with your Rust server from the in game menu
 
 ## How to build for development
@@ -97,7 +97,7 @@ Atlas is an **unofficial** interactive map experience for [Rust](https://rust.fa
 Download and Install Dependencies
 
 ```
-git clone https://github.com/jawadyazbek313/atlas-for-rust.gith
+git clone https://github.com/jawadyzbk/atlas-for-rust.gith
 cd atlas-for-rust
 npm install
 ```
@@ -110,7 +110,7 @@ npm run electron:serve
 
 ## Build for Mac, Windows and Linux
 
-At this stage, GitHub actions only builds and releases Windows versions of Atlas. However, if you want to run Atlas on Mac or Linux, you can use the command below.
+At this stage, GitHub actions only builds and releases Windows versions of RustLink. However, if you want to run RustLink on Mac or Linux, you can use the command below.
 
 ```
 npm run electron:build -- --mac --win --linux
@@ -118,7 +118,7 @@ npm run electron:build -- --mac --win --linux
 
 ## Updating Rust Assets
 
-Atlas uses images and metadata from the Rust game files. These can be updated with the [update_assets.js](./update_assets.js) script.
+RustLink uses images and metadata from the Rust game files. These can be updated with the [update_assets.js](./update_assets.js) script.
 
 ```shell
 node update_assets.js "<drive>:\SteamLibrary\steamapps\common\Rust"
@@ -126,4 +126,4 @@ node update_assets.js "<drive>:\SteamLibrary\steamapps\common\Rust"
 
 ## Contributing
 
-If you have a feature request, or find a bug with Atlas, please open an issue here on GitHub.
+If you have a feature request, or find a bug with RustLink, please open an issue here on GitHub.

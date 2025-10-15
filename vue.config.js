@@ -3,14 +3,15 @@ module.exports = {
         electronBuilder: {
             preload: 'src/preload.js',
             builderOptions: {
-                productName: "Atlas for Rust",
-                appId: 'com.liamcottle.electron.atlas-for-rust',
-                artifactName: 'AtlasForRust-${version}-${os}-${arch}.${ext}',
+                productName: "RustLink",
+                copyright: "Copyright © 2023 Jawad Yazbek",
+                appId: 'com.jawadyzbk.rustlink',
+                artifactName: 'RustLink-${version}-${os}-${arch}.${ext}',
                 "mac": {
-                    "icon": "./public/icon_rounded.png",
+                    "icon": "./public/images/icon.png",
                 },
                 "win": {
-                    "icon": "./public/icon_rounded.png",
+                    "icon": "./public/images/icon.png",
                 },
             },
             externals: [

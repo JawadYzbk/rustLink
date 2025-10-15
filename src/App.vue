@@ -13,8 +13,8 @@
 
             <!-- Logo -->
             <div class="flex-none flex py-4 bg-gray-800">
-              <a target="_blank" href="https://github.com/liamcottle/atlas-for-rust" class="mx-auto inline-flex items-center justify-center">
-                <img src="icon.png" alt="" class=" h-14 w-14 rounded-md bg-gray-300 shadow"/>
+              <a target="_blank" href="https://github.com/JawadYzbk/atlas-for-rust" class="mx-auto inline-flex items-center justify-center">
+                <img src="images/Logo-Dark.png" alt="RustLink" class=" h-14 w-14 rounded-md bg-gray-300 shadow"/>
               </a>
             </div>
 
@@ -107,15 +107,15 @@
               </div>
 
               <div class="flex flex-col text-white text-xs my-auto text-right">
-                <div>Atlas v{{ appversion }}</div>
+                <div>RustLink v{{ appversion }}</div>
                 <div class="flex mx-auto">
-                  <div>Developed with</div>
+                  <div>New Features with</div>
                   <div class="mx-1 text-red-500">
                     <svg class="w-4 h-4" fill="currentColor" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                       <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"></path>
                     </svg>
                   </div>
-                  <div>by <a class="hover:text-gray-300" target="_blank" href="https://liamcottle.com">Liam Cottle</a></div>
+                  <div>by <a class="hover:text-gray-300" target="_blank" href="https://github.com/JawadYzbk">Jawad Yzbk</a></div>
                 </div>
               </div>
 

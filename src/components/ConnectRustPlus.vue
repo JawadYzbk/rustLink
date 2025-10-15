@@ -7,17 +7,17 @@
         <div class="max-w-md mx-auto">
 
           <div class="flex mb-4">
-            <img class="mx-auto" src="icon_rounded.png" width="100" height="100"/>
+            <img class="mx-auto" src="/images/logo-no-text.png" width="125" height="125"/>
           </div>
 
           <div class="flex flex-col">
             <span class="mx-auto text-md">Welcome to</span>
-            <span class="mx-auto text-xl font-bold">Atlas for Rust</span>
+            <span class="mx-auto text-xl font-bold">RustLink</span>
           </div>
 
           <div class="divide-y divide-gray-200">
             <div class="py-8 text-base leading-6 space-y-4 text-gray-700 sm:text-lg sm:leading-7">
-              <p>To get started, connect Atlas with the official Rust+ Companion API.</p>
+              <p>To get started, connect RustLink with the official Rust+ Companion API.</p>
               <p>Once connected, you'll be able to pair with your Rust servers.</p>
             </div>
           </div>
@@ -59,7 +59,7 @@
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"></path>
           </svg>
         </div>
-        <div>by <a class="hover:text-gray-600" target="_blank" href="https://liamcottle.com">Liam Cottle</a></div>
+        <div>by <a class="hover:text-gray-600" target="_blank" href="https://github.com/JawadYzbk">Jawad Yazbek</a></div>
       </div>
 
       <div class="mx-auto text-gray-400">v{{ version }}</div>
