@@ -1356,25 +1356,25 @@ export default {
     },
     hasActiveEvents: function () {
       return this.activeHelicopter || this.activeCargo || this.activeCH47 || this.activeTravelingVendor;
+    },
+    formattedGameTime: function () {
+      if (!this.time) return null;
+
+      // Convert time (0-24) to hours and minutes
+      const totalMinutes = this.time.time * 60;
+      const hours = Math.floor(totalMinutes / 60) % 24;
+      const minutes = Math.floor(totalMinutes % 60);
+
+      // Format as HH:MM
+      const formattedHours = hours.toString().padStart(2, '0');
+      const formattedMinutes = minutes.toString().padStart(2, '0');
+
+      return `${formattedHours}:${formattedMinutes}`;
+    },
+    isDayTime: function () {
+      if (!this.time) return true;
+      return this.time.time >= this.time.sunrise && this.time.time <= this.time.sunset;
     }
-  },
-  formattedGameTime: function () {
-    if (!this.time) return null;
-
-    // Convert time (0-24) to hours and minutes
-    const totalMinutes = this.time.time * 60;
-    const hours = Math.floor(totalMinutes / 60) % 24;
-    const minutes = Math.floor(totalMinutes % 60);
-
-    // Format as HH:MM
-    const formattedHours = hours.toString().padStart(2, '0');
-    const formattedMinutes = minutes.toString().padStart(2, '0');
-
-    return `${formattedHours}:${formattedMinutes}`;
-  },
-  isDayTime: function () {
-    if (!this.time) return true;
-    return this.time.time >= this.time.sunrise && this.time.time <= this.time.sunset;
   },
 watch: {
   server: function() {

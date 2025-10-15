@@ -14,7 +14,7 @@
             <!-- Logo -->
             <div class="flex-none flex py-4 bg-gray-800">
               <a target="_blank" href="https://github.com/JawadYzbk/atlas-for-rust" class="mx-auto inline-flex items-center justify-center">
-                <img src="images/Logo-Dark.png" alt="RustLink" class=" h-14 w-14 rounded-md bg-gray-300 shadow"/>
+                <img src="images/icon.png" alt="RustLink" class=" h-14 w-14 rounded-md shadow"/>
               </a>
             </div>
 
