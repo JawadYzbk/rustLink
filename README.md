@@ -11,7 +11,8 @@
 
 Atlas is an **unofficial** interactive map experience for [Rust](https://rust.facepunch.com/). It uses the same websocket protocol that the official [Rust+ Companion app](https://rust.facepunch.com/companion) uses to communicate with the Rust game servers.
 
-<img width="1187" height="1140" alt="image" src="https://github.com/user-attachments/assets/edb49d19-d935-4d40-9865-67d723ffaa5c" />
+<img width="1641" height="1219" alt="image" src="https://github.com/user-attachments/assets/fe563f15-3aea-464b-8f52-d0842ed6dfc7" />
+
 
 
 ## Features
