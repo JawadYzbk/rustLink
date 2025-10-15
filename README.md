@@ -1,5 +1,9 @@
 <p align="center">
+<<<<<<< HEAD
 <a href="https://github.com/jawadyzbk/atlas-for-rust"><img src="./public/icon_rounded.png" width="150"></a>
+=======
+<a href="https://github.com/JawadYzbk/atlas-for-rust"><img src="./public/icon_rounded.png" width="150"></a>
+>>>>>>> 4ae2f3f95e55e4f9ce21f36fdfd44bd9e4ea069d
     <br>
 <a href="https://github.com/liamcottle/atlas-for-rust">Big thanks for Liam cottle for all his efforts developing the Base App</a>
     
@@ -11,7 +15,9 @@
 
 RustLink is an **unofficial** interactive map experience for [Rust](https://rust.facepunch.com/). It uses the same websocket protocol that the official [Rust+ Companion app](https://rust.facepunch.com/companion) uses to communicate with the Rust game servers.
 
-<img src="./docs/map.png">
+<img width="1641" height="1219" alt="image" src="https://github.com/user-attachments/assets/fe563f15-3aea-464b-8f52-d0842ed6dfc7" />
+
+
 
 ## Features
 
@@ -87,9 +93,15 @@ RustLink is an **unofficial** interactive map experience for [Rust](https://rust
 
 ## How to Install
 
+<<<<<<< HEAD
 - Download the latest installer from [Releases](https://github.com/jawadyzbk/atlas-for-rust/releases)
 - After downloading, run `RustLink-x.y.z-win.exe`
 - Connect with Rust+ from the RustLink welcome screen
+=======
+- Download the latest installer from [Releases](https://github.com/JawadYzbk/atlas-for-rust/releases)
+- After downloading, run `AtlasForRust-x.y.z-win.exe`
+- Connect with Rust+ from the Atlas welcome screen
+>>>>>>> 4ae2f3f95e55e4f9ce21f36fdfd44bd9e4ea069d
 - Pair with your Rust server from the in game menu
 
 ## How to build for development
@@ -97,7 +109,11 @@ RustLink is an **unofficial** interactive map experience for [Rust](https://rust
 Download and Install Dependencies
 
 ```
+<<<<<<< HEAD
 git clone https://github.com/jawadyzbk/atlas-for-rust.gith
+=======
+git clone https://github.com/JawadYzbk/atlas-for-rust.gith
+>>>>>>> 4ae2f3f95e55e4f9ce21f36fdfd44bd9e4ea069d
 cd atlas-for-rust
 npm install
 ```
