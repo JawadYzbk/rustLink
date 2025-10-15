@@ -1,7 +1,7 @@
 <p align="center">
-<a href="https://github.com/jawadyzbk/atlas-for-rust"><img src="./public/icon_rounded.png" width="150"></a>
+<a href="https://github.com/jawadyzbk/rustLink"><img src="./public/icon_rounded.png" width="150"></a>
     <br>
-<a href="https://github.com/liamcottle/atlas-for-rust">Big thanks for Liam cottle for all his efforts developing the Base App</a>
+<a href="https://github.com/liamcottle/rustLink">Big thanks for Liam cottle for all his efforts developing the Base App</a>
     
 </p>
 
@@ -87,7 +87,7 @@ RustLink is an **unofficial** interactive map experience for [Rust](https://rust
 
 ## How to Install
 
-- Download the latest installer from [Releases](https://github.com/jawadyzbk/atlas-for-rust/releases)
+- Download the latest installer from [Releases](https://github.com/jawadyzbk/rustLink/releases)
 - After downloading, run `RustLink-x.y.z-win.exe`
 - Connect with Rust+ from the RustLink welcome screen
 - Pair with your Rust server from the in game menu
@@ -97,8 +97,8 @@ RustLink is an **unofficial** interactive map experience for [Rust](https://rust
 Download and Install Dependencies
 
 ```
-git clone https://github.com/jawadyzbk/atlas-for-rust.gith
-cd atlas-for-rust
+git clone https://github.com/jawadyzbk/rustLink.gith
+cd rustLink
 npm install
 ```
 

@@ -51,7 +51,7 @@ class ExpoPushTokenManager {
             /**
              * todo: this is insecure and should not be used, but electron v11 is not going to backport the fix
              * ignores invalid ssl certificates when registering for expo push token
-             * temporary fix for: https://github.com/liamcottle/atlas-for-rust/issues/5
+             * temporary fix for: https://github.com/liamcottle/rustLink/issues/5
              */
             httpsAgent: new https.Agent({
                 rejectUnauthorized: false

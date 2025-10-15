@@ -41,7 +41,7 @@
                 <div class="text-sm text-gray-500">
                   <div class="font-bold">Have a feature request?</div>
                   <div>
-                    <a class="underline hover:text-gray-700" target="_blank" href="https://github.com/JawadYzbk/atlas-for-rust">Open an Issue on GitHub</a>
+                    <a class="underline hover:text-gray-700" target="_blank" href="https://github.com/JawadYzbk/rustLink">Open an Issue on GitHub</a>
                   </div>
                 </div>
               </div>

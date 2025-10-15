@@ -13,7 +13,7 @@
 
             <!-- Logo -->
             <div class="flex-none flex py-4 bg-gray-800">
-              <a target="_blank" href="https://github.com/JawadYzbk/atlas-for-rust" class="mx-auto inline-flex items-center justify-center">
+              <a target="_blank" href="https://github.com/JawadYzbk/rustLink" class="mx-auto inline-flex items-center justify-center">
                 <img src="images/icon.png" alt="RustLink" class=" h-14 w-14 rounded-md shadow"/>
               </a>
             </div>
@@ -359,7 +359,7 @@ export default {
          * So, we will use a unique deviceId per installation so notifications will work across multiple installs.
          */
         var expoDeviceId = window.DataStore.Config.getExpoDeviceId();
-        var deviceId = '@liamcottle/atlas-for-rust:' + expoDeviceId;
+        var deviceId = '@jawadyzbk/rustLink:' + expoDeviceId;
         var rustplusToken = window.DataStore.Config.getRustPlusToken();
 
         this.rustCompanionReceiver.register(deviceId, rustplusToken, data.expoPushToken);
