@@ -11,7 +11,8 @@
 
 RustLink is an **unofficial** interactive map experience for [Rust](https://rust.facepunch.com/). It uses the same websocket protocol that the official [Rust+ Companion app](https://rust.facepunch.com/companion) uses to communicate with the Rust game servers.
 
-<img src="./docs/map.png">
+<img width="1188" height="1108" alt="map" src="https://github.com/user-attachments/assets/3204b9e6-6ae0-4322-865e-f8eded7c6fe5" />
+
 
 ## Features
 
