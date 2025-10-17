@@ -6,6 +6,16 @@
 </p>
 
 <h2 align="center">RustLink (Rust+ Unofficial alternative for PC )</h2>
+<h3 align="center">Star my repo for more updates <br> </h2>
+
+[![Star RustLink](https://img.shields.io/badge/⭐_Star%20RustLink-181717?style=for-the-badge&logo=github)](https://github.com/JawadYzbk/rustLink)
+[![GitHub stars](https://img.shields.io/github/stars/JawadYzbk/rustLink?style=for-the-badge&logo=github)](https://github.com/JawadYzbk/rustLink/stargazers)
+
+
+
+
+
+
 
 ## What is RustLink
 
