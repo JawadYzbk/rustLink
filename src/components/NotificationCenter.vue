@@ -104,6 +104,14 @@ export default {
       showNotifications: false
     }
   },
+  mounted() {
+    // Add click outside listener
+    document.addEventListener('click', this.handleClickOutside);
+  },
+  beforeUnmount() {
+    // Remove click outside listener
+    document.removeEventListener('click', this.handleClickOutside);
+  },
   computed: {
     unreadCount() {
       return this.notifications.filter(n => !n.read).length;
@@ -115,6 +123,12 @@ export default {
   methods: {
     toggleNotifications() {
       this.showNotifications = !this.showNotifications;
+    },
+    handleClickOutside(event) {
+      // Check if the click is outside the notification center
+      if (this.$el && !this.$el.contains(event.target)) {
+        this.showNotifications = false;
+      }
     },
     markAsRead(notificationId) {
       this.$emit('mark-as-read', notificationId);
