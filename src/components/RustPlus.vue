@@ -27,6 +27,16 @@
       <div class="flex-none flex">
 
         <!-- vending machine search button -->
+        <!-- notification center -->
+        <NotificationCenter 
+          v-if="status === 'connected'"
+          :notifications="notifications"
+          @mark-as-read="markNotificationAsRead"
+          @clear-all="clearAllNotifications"
+          class="mr-2 mt-1"
+        />
+
+        <!-- search vending machines button -->
         <button v-if="status !== 'none' || status !== 'error'" @click="showVendingMachineSearch" type="button"
           class="mr-2 my-auto inline-flex items-center px-3 py-2 border border-transparent shadow-sm text-sm leading-4 font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none">
           <svg class="flex-none my-auto mr-2 w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"
@@ -519,6 +529,7 @@ import ServerError from "@/components/ServerError";
 import VendingMachineContents from "@/components/VendingMachineContents";
 import VendingMachineSearch from "@/components/VendingMachineSearch";
 import ItemModal from "@/components/modals/ItemModal";
+import NotificationCenter from "@/components/NotificationCenter";
 
 export default {
   name: 'RustPlus',
@@ -536,6 +547,7 @@ export default {
     VendingMachineContents,
     VendingMachineSearch,
     ItemModal,
+    NotificationCenter,
   },
   props: {
     server: Object,
@@ -592,6 +604,7 @@ export default {
       rustMapMarkers: [],
       rustTeamMembers: [],
       rustTeamChatMessages: [],
+      notifications: [],
 
       /* grid system */
       gridLines: [],
@@ -617,6 +630,9 @@ export default {
     // lookup proto types
     this.AppRequest = this.protospec.lookupType("rustplus.AppRequest");
     this.AppMessage = this.protospec.lookupType("rustplus.AppMessage");
+
+    // load saved notifications from persistent storage
+    this.loadNotificationsFromStorage();
 
     // connect
     this.connect();
@@ -864,6 +880,14 @@ export default {
           this.rustTeamChatMessages.push(message.broadcast.teamMessage.message);
           this.scrollTeamChatToBottom();
 
+          // Add notification for team message
+          this.addNotification(
+            'team_message',
+            'New Team Message',
+            `${message.broadcast.teamMessage.message.name}: ${message.broadcast.teamMessage.message.message}`,
+            message.broadcast.teamMessage
+          );
+
         } else if (message.broadcast.teamChanged) {
 
           console.log(message);
@@ -878,6 +902,38 @@ export default {
           this.getTeamChat((response) => {
             this.scrollTeamChatToBottom();
           });
+
+          // Add notification for team change
+          this.addNotification(
+            'team_changed',
+            'Team Updated',
+            'Your team information has been updated',
+            message.broadcast.teamChanged
+          );
+
+        } else if (message.broadcast.entityChanged) {
+
+          console.log(message);
+
+          // Add notification for entity change
+          const entityInfo = message.broadcast.entityChanged.entityInfo;
+          let entityName = 'Entity';
+          
+          if (entityInfo && entityInfo.type) {
+            switch (entityInfo.type) {
+              case 1: entityName = 'Switch'; break;
+              case 2: entityName = 'Alarm'; break;
+              case 3: entityName = 'Storage Monitor'; break;
+              default: entityName = `Entity (${entityInfo.type})`;
+            }
+          }
+
+          this.addNotification(
+            'entity_changed',
+            'Entity Status Changed',
+            `${entityName} status has been updated`,
+            message.broadcast.entityChanged
+          );
 
         } else {
           console.log(message);
@@ -1322,6 +1378,97 @@ export default {
       this.gridLabels = gridLabels;
     },
 
+    // Notification handling methods
+    addNotification(typeOrChannel, title, message, data = null) {
+      const notification = {
+        id: Date.now() + Math.random(),
+        timestamp: new Date(),
+        read: false,
+        data: data,
+        serverId: this.server ? this.server.id : 'unknown',
+        serverName: this.server ? this.server.name : 'Unknown Server'
+      };
+
+      // Handle Rust+ API notifications with channel numbers
+      if (typeof typeOrChannel === 'number') {
+        notification.channel = typeOrChannel;
+        notification.title = title;
+        notification.message = message;
+        
+        // Extract additional data fields for Rust+ API notifications
+        if (data) {
+          notification.entityId = data.entityId;
+          notification.entityType = data.entityType;
+          notification.entityName = data.entityName;
+          notification.playerId = data.playerId;
+          notification.playerName = data.name || data.playerName;
+          notification.serverName = data.name || notification.serverName;
+          notification.type = data.type; // death, login, server, entity
+        }
+      } else {
+        // Handle existing notification structure (team_message, team_changed, entity_changed)
+        notification.type = typeOrChannel;
+        notification.title = title;
+        notification.message = message;
+      }
+      
+      // Add to beginning of array (newest first)
+      this.notifications.unshift(notification);
+      
+      // Keep only last 50 notifications
+      if (this.notifications.length > 50) {
+        this.notifications = this.notifications.slice(0, 50);
+      }
+
+      // Save to persistent storage
+      this.saveNotificationsToStorage();
+    },
+
+    markNotificationAsRead(notificationId) {
+      const notification = this.notifications.find(n => n.id === notificationId);
+      if (notification) {
+        notification.read = true;
+        // Save to persistent storage
+        this.saveNotificationsToStorage();
+      }
+    },
+
+    clearAllNotifications() {
+      this.notifications = [];
+      // Clear from persistent storage
+      this.saveNotificationsToStorage();
+    },
+
+    // Persistent storage methods
+    loadNotificationsFromStorage() {
+      try {
+        const savedNotifications = window.DataStore.Notifications.getNotifications();
+        if (savedNotifications && Array.isArray(savedNotifications)) {
+          // Filter notifications for this specific server only
+          const serverNotifications = savedNotifications.filter(notification => {
+            return notification.serverId === (this.server ? this.server.id : 'unknown');
+          });
+          
+          // Convert timestamp strings back to Date objects
+          this.notifications = serverNotifications.map(notification => ({
+            ...notification,
+            timestamp: new Date(notification.timestamp)
+          }));
+        }
+      } catch (error) {
+        console.error('Failed to load notifications from storage:', error);
+        this.notifications = [];
+      }
+    },
+
+    saveNotificationsToStorage() {
+      try {
+        window.DataStore.Notifications.setNotifications(this.notifications);
+      } catch (error) {
+        console.error('Failed to save notifications to storage:', error);
+      }
+    },
+
   },
   computed: {
     // Return fixed icon size that doesn't change with zoom level
@@ -1407,6 +1554,9 @@ watch: {
     // clear existing data to prevent stale data display
     this.gridLines = [];
     this.gridLabels = [];
+
+    // reload notifications for the new server
+    this.loadNotificationsFromStorage();
 
     // connect if server was updated
     if (this.server) {
@@ -1518,6 +1668,7 @@ watch: {
     this.rustTeamChatMessages = this.teamChat.messages;
 
   },
+
 },
 }
 </script>

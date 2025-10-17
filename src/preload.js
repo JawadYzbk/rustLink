@@ -12,6 +12,7 @@ window.DataStore = {
     Config: require('@/js/datastore/ConfigDataStore'),
     FCM: require('@/js/datastore/FCMDataStore'),
     Servers: require('@/js/datastore/ServerDataStore'),
+    Notifications: require('@/js/datastore/NotificationDataStore'),
 };
 
 /**
