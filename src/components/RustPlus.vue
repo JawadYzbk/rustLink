@@ -33,6 +33,7 @@
           :notifications="notifications"
           @mark-as-read="markNotificationAsRead"
           @clear-all="clearAllNotifications"
+          @open-pairing-modal="openPairingModal"
           class="mr-2 mt-1"
         />
 
@@ -1404,6 +1405,28 @@ export default {
           notification.playerName = data.name || data.playerName;
           notification.serverName = data.name || notification.serverName;
           notification.type = data.type; // death, login, server, entity
+          
+          // Enhanced pairing data capture for server pairing notifications (channel 1001)
+          if (typeOrChannel === 1001 || data.type === 'server' || data.type === 'pairing') {
+            console.log("=== Capturing Pairing Data in NotificationCenter ===");
+            console.log("Original data:", data);
+            
+            // Extract comprehensive pairing information
+            notification.ip = data.ip;
+            notification.port = data.port;
+            notification.playerId = data.playerId;
+            notification.playerToken = data.playerToken;
+            notification.name = data.name || data.serverName || 'Unknown Server';
+            notification.serverName = data.name || data.serverName || 'Unknown Server';
+            notification.desc = data.desc || data.body || message;
+            notification.type = 'pairing'; // Ensure consistent type for pairing notifications
+            
+            // Store original notification body for reference
+            notification.originalData = data;
+            
+            console.log("Enhanced pairing notification:", notification);
+            console.log("=== End Pairing Data Capture ===");
+          }
         }
       } else {
         // Handle existing notification structure (team_message, team_changed, entity_changed)
@@ -1412,48 +1435,99 @@ export default {
         notification.message = message;
       }
       
-      // Add to beginning of array (newest first)
-      this.notifications.unshift(notification);
-      
-      // Keep only last 50 notifications
-      if (this.notifications.length > 50) {
-        this.notifications = this.notifications.slice(0, 50);
+      // Add to global notification storage instead of local array
+      if (window.DataStore && window.DataStore.Notifications) {
+        window.DataStore.Notifications.addNotification(notification);
       }
-
-      // Save to persistent storage
-      this.saveNotificationsToStorage();
+      
+      // Reload notifications from global storage to update local display
+      this.loadNotificationsFromStorage();
     },
 
     markNotificationAsRead(notificationId) {
+      // Mark notification as read in global storage
+      if (window.DataStore && window.DataStore.Notifications) {
+        window.DataStore.Notifications.markNotificationAsRead(notificationId);
+      }
+      
+      // Update local notification display
       const notification = this.notifications.find(n => n.id === notificationId);
       if (notification) {
         notification.read = true;
-        // Save to persistent storage
-        this.saveNotificationsToStorage();
       }
     },
 
+    openPairingModal(notification) {
+      // Set the notification data for the pairing modal
+      this.$parent.lastReceivedPairNotification = notification;
+      // Open the pairing modal
+      this.$parent.isShowingPairServerModal = true;
+    },
+
     clearAllNotifications() {
+      // Clear notifications for this server from global storage
+      if (window.DataStore && window.DataStore.Notifications) {
+        const serverId = this.server ? this.server.id : 'unknown';
+        const globalNotifications = window.DataStore.Notifications.getNotifications();
+        
+        // Filter out notifications for this server using the same logic as loadNotificationsFromStorage
+        const filteredNotifications = globalNotifications.filter(notification => {
+          if (serverId === 'unknown') {
+            // When no server is selected, remove notifications for 'unknown' server
+            return notification.serverId !== 'unknown';
+          } else {
+            // When a specific server is selected, remove notifications for that server
+            // and also remove 'unknown' notifications that might belong to this server
+            return !(notification.serverId === serverId || 
+                    (notification.serverId === 'unknown' && 
+                     notification.serverName && 
+                     notification.serverName === this.server.name));
+          }
+        });
+        
+        // Save the filtered notifications back to global storage
+        window.DataStore.Notifications.setNotifications(filteredNotifications);
+      }
+      
+      // Clear local notifications array
       this.notifications = [];
-      // Clear from persistent storage
-      this.saveNotificationsToStorage();
     },
 
     // Persistent storage methods
     loadNotificationsFromStorage() {
       try {
-        const savedNotifications = window.DataStore.Notifications.getNotifications();
-        if (savedNotifications && Array.isArray(savedNotifications)) {
-          // Filter notifications for this specific server only
-          const serverNotifications = savedNotifications.filter(notification => {
-            return notification.serverId === (this.server ? this.server.id : 'unknown');
+        const serverId = this.server ? this.server.id : 'unknown';
+        
+        // Read from global notification storage and filter by serverId
+        const globalNotifications = window.DataStore.Notifications.getNotifications();
+        
+        if (globalNotifications && Array.isArray(globalNotifications)) {
+          // Filter notifications for this specific server
+          // Include notifications with 'unknown' serverId when no server is selected
+          // or when the current server ID is 'unknown'
+          const serverNotifications = globalNotifications.filter(notification => {
+            if (serverId === 'unknown') {
+              // When no server is selected, show notifications for 'unknown' server
+              return notification.serverId === 'unknown';
+            } else {
+              // When a specific server is selected, show notifications for that server
+              // and also include 'unknown' notifications that might belong to this server
+              return notification.serverId === serverId || 
+                     (notification.serverId === 'unknown' && 
+                      notification.serverName && 
+                      notification.serverName === this.server.name);
+            }
           });
           
-          // Convert timestamp strings back to Date objects
-          this.notifications = serverNotifications.map(notification => ({
-            ...notification,
-            timestamp: new Date(notification.timestamp)
-          }));
+          // Convert timestamp strings back to Date objects and sort by timestamp (newest first)
+          this.notifications = serverNotifications
+            .map(notification => ({
+              ...notification,
+              timestamp: new Date(notification.timestamp)
+            }))
+            .sort((a, b) => b.timestamp - a.timestamp);
+        } else {
+          this.notifications = [];
         }
       } catch (error) {
         console.error('Failed to load notifications from storage:', error);
@@ -1463,7 +1537,9 @@ export default {
 
     saveNotificationsToStorage() {
       try {
-        window.DataStore.Notifications.setNotifications(this.notifications);
+        // No longer save to server-specific storage
+        // Notifications are now managed through global storage only
+        console.log('Server notifications are now managed through global storage');
       } catch (error) {
         console.error('Failed to save notifications to storage:', error);
       }

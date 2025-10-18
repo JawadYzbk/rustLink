@@ -78,15 +78,20 @@ export default {
   },
   mounted: async function () {
 
-    // handle rust+ login callback
-    window.ipcRenderer.on('connect-with-rustplus.success', (event, data) => {
-      this.onRustPlusConnected(data.steamId, data.token);
-    });
+    // Check if ipcRenderer is available before using it
+    if (window.ipcRenderer) {
+      // handle rust+ login callback
+      window.ipcRenderer.on('connect-with-rustplus.success', (event, data) => {
+        this.onRustPlusConnected(data.steamId, data.token);
+      });
+    }
 
   },
   methods: {
     connectWithRustPlus: function() {
-      window.ipcRenderer.send('connect-with-rustplus');
+      if (window.ipcRenderer) {
+        window.ipcRenderer.send('connect-with-rustplus');
+      }
     },
     onRustPlusConnected(id, token) {
       this.$emit('rustplus-connected', {

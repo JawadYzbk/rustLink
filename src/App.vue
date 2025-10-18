@@ -177,130 +177,190 @@
                     <p class="text-sm">No notifications yet</p>
                     <p class="text-xs text-gray-400 mt-1">Notifications will appear here when received</p>
                   </div>
-                  <div v-else class="space-y-3">
+                  <div v-else class="space-y-4">
                     <div v-for="notification in globalNotifications" :key="notification.id" 
-                         class="group relative p-4 border rounded-xl transition-all duration-200 hover:shadow-md cursor-pointer"
+                         class="group relative border rounded-xl transition-all duration-200 hover:shadow-lg cursor-pointer overflow-hidden"
                          :class="{ 
                            'bg-white border-gray-200 hover:border-gray-300': notification.read, 
-                           'bg-gradient-to-r from-blue-50 to-indigo-50 border-blue-200 hover:border-blue-300 shadow-sm': !notification.read 
+                           'bg-gradient-to-br from-blue-50 via-white to-indigo-50 border-blue-200 hover:border-blue-300 shadow-sm': !notification.read 
                          }"
-                         @click="markGlobalNotificationAsRead(notification.id)">
+                         @click="handleGlobalNotificationClick(notification)">
                       
-                      <!-- Unread indicator dot -->
-                      <div v-if="!notification.read" class="absolute top-4 left-2 w-2 h-2 bg-blue-500 rounded-full"></div>
-                      
-                      <div class="flex items-start space-x-3" :class="{ 'ml-4': !notification.read }">
-                        <!-- Notification Icon -->
-                        <div class="flex-shrink-0 mt-0.5">
-                          <div class="w-8 h-8 rounded-full flex items-center justify-center" 
-                               :class="getGlobalNotificationIconBg(notification)">
-                            <!-- Pairing notification icon -->
-                            <svg v-if="notification.channel === 1001 || notification.type === 'pairing'" 
-                                 class="w-4 h-4" :class="getGlobalNotificationIconColor(notification)" 
-                                 fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
-                                    d="M13 10V3L4 14h7v7l9-11h-7z" />
-                            </svg>
-                            <!-- Player logged in icon -->
-                            <svg v-else-if="notification.channel === 1002 || notification.type === 'player_login'" 
-                                 class="w-4 h-4" :class="getGlobalNotificationIconColor(notification)" 
-                                 fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
-                                    d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
-                            </svg>
-                            <!-- Player died icon -->
-                            <svg v-else-if="notification.channel === 1003 || notification.type === 'player_death'" 
-                                 class="w-4 h-4" :class="getGlobalNotificationIconColor(notification)" 
-                                 fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
-                                    d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L4.082 16.5c-.77.833.192 2.5 1.732 2.5z" />
-                            </svg>
-                            <!-- Smart alarm icon -->
-                            <svg v-else-if="notification.channel === 1004 || notification.type === 'smart_alarm'" 
-                                 class="w-4 h-4" :class="getGlobalNotificationIconColor(notification)" 
-                                 fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
-                                    d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
-                            </svg>
-                            <!-- Team message icon -->
-                            <svg v-else-if="notification.type === 'team_message'" 
-                                 class="w-4 h-4" :class="getGlobalNotificationIconColor(notification)" 
-                                 fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
-                                    d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
-                            </svg>
-                            <!-- Team changed icon -->
-                            <svg v-else-if="notification.type === 'team_changed'" 
-                                 class="w-4 h-4" :class="getGlobalNotificationIconColor(notification)" 
-                                 fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
-                                    d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
-                            </svg>
-                            <!-- Entity changed icon -->
-                            <svg v-else-if="notification.type === 'entity_changed'" 
-                                 class="w-4 h-4" :class="getGlobalNotificationIconColor(notification)" 
-                                 fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
-                                    d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
-                            </svg>
-                            <!-- Default notification icon -->
-                            <svg v-else class="w-4 h-4" :class="getGlobalNotificationIconColor(notification)" 
-                                 fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
-                                    d="M15 17h5l-5 5v-5zM11 19H6a2 2 0 01-2-2V7a2 2 0 012-2h6m2 13V9a2 2 0 00-2-2H8" />
-                            </svg>
-                          </div>
+                      <!-- Header Section with Type Badge and Priority Indicator -->
+                      <div class="flex items-center justify-between px-4 pt-4 pb-2">
+                        <div class="flex items-center space-x-3">
+                          <!-- Priority/Unread Indicator -->
+                          <div v-if="!notification.read" class="w-2 h-2 bg-blue-500 rounded-full animate-pulse"></div>
+                          <div v-else class="w-2 h-2 bg-gray-300 rounded-full"></div>
+                          
+                          <!-- Type Badge -->
+                          <span v-if="getNotificationTypeLabel(notification)" 
+                                class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-semibold tracking-wide"
+                                :class="getNotificationTypeBadgeClass(notification)">
+                            {{ getNotificationTypeLabel(notification) }}
+                          </span>
                         </div>
                         
-                        <!-- Notification Content -->
-                        <div class="flex-grow min-w-0">
-                          <div class="flex items-start justify-between">
-                            <div class="flex-grow">
-                              <h4 class="font-semibold text-gray-900 text-sm leading-5 mb-1">
-                                {{ notification.title }}
+                        <!-- Timestamp -->
+                        <div class="flex items-center text-xs text-gray-500">
+                          <svg class="w-3 h-3 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
+                                  d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                          </svg>
+                          {{ formatNotificationTime(notification.timestamp) }}
+                        </div>
+                      </div>
+                      
+                      <!-- Main Content Section -->
+                      <div class="px-4 pb-3">
+                        <div class="flex items-start space-x-4">
+                          <!-- Notification Icon -->
+                          <div class="flex-shrink-0">
+                            <div class="w-10 h-10 rounded-xl flex items-center justify-center shadow-sm" 
+                                 :class="getGlobalNotificationIconBg(notification)">
+                              <!-- Pairing notification icon -->
+                              <svg v-if="notification.channel === 1001 || notification.type === 'pairing'" 
+                                   class="w-5 h-5" :class="getGlobalNotificationIconColor(notification)" 
+                                   fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
+                                      d="M13 10V3L4 14h7v7l9-11h-7z" />
+                              </svg>
+                              <!-- Player logged in icon -->
+                              <svg v-else-if="notification.channel === 1002 || notification.type === 'player_login'" 
+                                   class="w-5 h-5" :class="getGlobalNotificationIconColor(notification)" 
+                                   fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
+                                      d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                              </svg>
+                              <!-- Player died icon -->
+                              <svg v-else-if="notification.channel === 1003 || notification.type === 'player_death'" 
+                                   class="w-5 h-5" :class="getGlobalNotificationIconColor(notification)" 
+                                   fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
+                                      d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L4.082 16.5c-.77.833.192 2.5 1.732 2.5z" />
+                              </svg>
+                              <!-- Smart alarm icon -->
+                              <svg v-else-if="notification.channel === 1004 || notification.type === 'smart_alarm'" 
+                                   class="w-5 h-5" :class="getGlobalNotificationIconColor(notification)" 
+                                   fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
+                                      d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                              </svg>
+                              <!-- Team message icon -->
+                              <svg v-else-if="notification.type === 'team_message'" 
+                                   class="w-5 h-5" :class="getGlobalNotificationIconColor(notification)" 
+                                   fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
+                                      d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
+                              </svg>
+                              <!-- Team changed icon -->
+                              <svg v-else-if="notification.type === 'team_changed'" 
+                                   class="w-5 h-5" :class="getGlobalNotificationIconColor(notification)" 
+                                   fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
+                                      d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
+                              </svg>
+                              <!-- Entity changed icon -->
+                              <svg v-else-if="notification.type === 'entity_changed'" 
+                                   class="w-5 h-5" :class="getGlobalNotificationIconColor(notification)" 
+                                   fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
+                                      d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+                              </svg>
+                              <!-- Default notification icon -->
+                              <svg v-else class="w-5 h-5" :class="getGlobalNotificationIconColor(notification)" 
+                                   fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
+                                      d="M15 17h5l-5 5v-5zM11 19H6a2 2 0 01-2-2V7a2 2 0 012-2h6m2 13V9a2 2 0 00-2-2H8" />
+                              </svg>
+                            </div>
+                          </div>
+                          
+                          <!-- Content Area -->
+                          <div class="flex-grow min-w-0">
+                            <!-- Title and Message -->
+                            <div class="mb-3">
+                              <h4 class="font-semibold text-gray-900 text-base leading-6 mb-1">
+                                {{ notification.name }}
                               </h4>
-                              <p class="text-sm text-gray-600 leading-5 mb-2">
-                                {{ notification.message }}
+                              <!-- Show "Click to pair" for pairing notifications, otherwise show the message -->
+                              <p v-if="notification.channel === 1001 || notification.type === 'pairing' || notification.type === 'server'" 
+                                 class="text-sm text-orange-600 leading-5 break-words font-medium">
+                                Click to pair
                               </p>
-                              
-                              <!-- Metadata row -->
-                              <div class="flex items-center space-x-3 text-xs text-gray-500">
-                                <span class="flex items-center">
-                                  <svg class="w-3 h-3 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
-                                          d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
-                                  </svg>
-                                  {{ formatNotificationTime(notification.timestamp) }}
-                                </span>
-                                
-                                <span v-if="notification.serverName && notification.serverName !== 'Unknown Server'" 
-                                      class="flex items-center px-2 py-1 bg-gray-100 rounded-full">
-                                  <svg class="w-3 h-3 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
-                                          d="M5 12h14M5 12a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v4a2 2 0 01-2 2M5 12a2 2 0 00-2 2v4a2 2 0 002 2h14a2 2 0 002-2v-4a2 2 0 00-2-2m-2-4h.01M17 16h.01" />
-                                  </svg>
-                                  {{ notification.serverName }}
-                                </span>
-                                
-                                <span v-if="getNotificationTypeLabel(notification)" 
-                                      class="px-2 py-1 rounded-full text-xs font-medium"
-                                      :class="getNotificationTypeBadgeClass(notification)">
-                                  {{ getNotificationTypeLabel(notification) }}
-                                </span>
-                              </div>
+                              <p v-else class="text-sm text-gray-700 leading-5 break-words">
+                                {{ truncateMessage(notification.message, 120) }}
+                              </p>
                             </div>
                             
-                            <!-- Action button -->
-                            <div class="flex-shrink-0 ml-4">
-                              <button v-if="!notification.read" 
-                                      @click.stop="markGlobalNotificationAsRead(notification.id)" 
-                                      class="opacity-0 group-hover:opacity-100 transition-opacity duration-200 text-blue-600 hover:text-blue-800 text-xs font-medium px-2 py-1 rounded hover:bg-blue-50">
-                                Mark as read
-                              </button>
-                              <div v-else class="text-xs text-gray-400 font-medium">
+                            <!-- Context Information Section -->
+                            <div v-if="hasGlobalContextInfo(notification) && !(notification.channel === 1001 || notification.type === 'pairing' || notification.type === 'server')" class="mb-3">
+                              <div class="bg-gray-50 rounded-lg p-3 space-y-2">
+                                <h5 class="text-xs font-semibold text-gray-600 uppercase tracking-wide mb-2">Context</h5>
+                                
+                                <!-- Server Context -->
+                                <div v-if="notification.name && notification.name !== 'Unknown Server'" 
+                                     class="flex items-center space-x-2 text-sm">
+                                  <div class="flex items-center space-x-2 text-gray-600">
+                                    <svg class="w-4 h-4 text-blue-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
+                                            d="M5 12h14M5 12a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v4a2 2 0 01-2 2M5 12a2 2 0 00-2 2v4a2 2 0 002 2h14a2 2 0 002-2v-4a2 2 0 00-2-2m-2-4h.01M17 16h.01" />
+                                    </svg>
+                                    <span class="font-medium">Server:</span>
+                                  </div>
+                                  <span class="text-gray-800 font-medium">{{ notification.name }}</span>
+                                </div>
+                                
+                                <!-- Player Context -->
+                                <div v-if="notification.playerName" class="flex items-center space-x-2 text-sm">
+                                  <div class="flex items-center space-x-2 text-gray-600">
+                                    <svg class="w-4 h-4 text-green-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
+                                            d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                                    </svg>
+                                    <span class="font-medium">Player:</span>
+                                  </div>
+                                  <span class="text-gray-800 font-medium">{{ notification.playerName }}</span>
+                                </div>
+                                
+                                <!-- Entity Context -->
+                                <div v-if="notification.entityName" class="flex items-center space-x-2 text-sm">
+                                  <div class="flex items-center space-x-2 text-gray-600">
+                                    <svg class="w-4 h-4 text-purple-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
+                                            d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
+                                    </svg>
+                                    <span class="font-medium">Entity:</span>
+                                  </div>
+                                  <span class="text-gray-800 font-medium">{{ notification.entityName }}</span>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                          
+                          <!-- Action Area -->
+                          <div class="flex-shrink-0 flex flex-col items-end space-y-2">
+                            <!-- Read Status Indicator -->
+                            <div class="flex items-center">
+                              <div v-if="!notification.read" 
+                                   class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
+                                <div class="w-1.5 h-1.5 bg-blue-500 rounded-full mr-1.5"></div>
+                                Unread
+                              </div>
+                              <div v-else class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-gray-100 text-gray-600">
+                                <svg class="w-3 h-3 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                                </svg>
                                 Read
                               </div>
                             </div>
+                            
+                            <!-- Action Button -->
+                            <button v-if="!notification.read" 
+                                    @click.stop="markGlobalNotificationAsRead(notification.id)" 
+                                    class="opacity-0 group-hover:opacity-100 transition-all duration-200 text-blue-600 hover:text-blue-800 text-xs font-medium px-3 py-1.5 rounded-md hover:bg-blue-50 border border-blue-200 hover:border-blue-300">
+                              Mark as read
+                            </button>
                           </div>
                         </div>
                       </div>
@@ -424,26 +484,43 @@ export default {
     // load global notifications from store
     this.loadGlobalNotifications();
 
+    // Initialize notification history system on startup
+    this.initializeNotificationHistory();
+
     // setup fcm, expo and rust companion receivers
-    this.fcmNotificationReceiver = new window.FCMNotificationReceiver(window.ipcRenderer);
-    this.expoPushTokenReceiver = new window.ExpoPushTokenReceiver(window.ipcRenderer);
-    this.rustCompanionReceiver = new window.RustCompanionReceiver(window.ipcRenderer);
+    if (window.FCMNotificationReceiver && window.ipcRenderer) {
+      this.fcmNotificationReceiver = new window.FCMNotificationReceiver(window.ipcRenderer);
+      
+      // setup fcm listeners
+      if (this.fcmNotificationReceiver) {
+        this.fcmNotificationReceiver.on('register.success', this.onFCMRegisterSuccess);
+        this.fcmNotificationReceiver.on('register.error', this.onFCMRegisterError);
+        this.fcmNotificationReceiver.on('notifications.listen.started', this.onFCMNotificationsListenStarted);
+        this.fcmNotificationReceiver.on('notifications.listen.stopped', this.onFCMNotificationsListenStopped);
+        this.fcmNotificationReceiver.on('notifications.received', this.onFCMNotificationsReceived);
+        this.fcmNotificationReceiver.on('notifications.error', this.onFCMNotificationsError);
+      }
+    }
 
-    // setup fcm listeners
-    this.fcmNotificationReceiver.on('register.success', this.onFCMRegisterSuccess);
-    this.fcmNotificationReceiver.on('register.error', this.onFCMRegisterError);
-    this.fcmNotificationReceiver.on('notifications.listen.started', this.onFCMNotificationsListenStarted);
-    this.fcmNotificationReceiver.on('notifications.listen.stopped', this.onFCMNotificationsListenStopped);
-    this.fcmNotificationReceiver.on('notifications.received', this.onFCMNotificationsReceived);
-    this.fcmNotificationReceiver.on('notifications.error', this.onFCMNotificationsError);
+    if (window.ExpoPushTokenReceiver && window.ipcRenderer) {
+      this.expoPushTokenReceiver = new window.ExpoPushTokenReceiver(window.ipcRenderer);
+      
+      // setup expo listeners
+      if (this.expoPushTokenReceiver) {
+        this.expoPushTokenReceiver.on('register.success', this.onExpoRegisterSuccess);
+        this.expoPushTokenReceiver.on('register.error', this.onExpoRegisterError);
+      }
+    }
 
-    // setup expo listeners
-    this.expoPushTokenReceiver.on('register.success', this.onExpoRegisterSuccess);
-    this.expoPushTokenReceiver.on('register.error', this.onExpoRegisterError);
-
-    // setup rust companion listeners
-    this.rustCompanionReceiver.on('register.success', this.onRustCompanionRegisterSuccess);
-    this.rustCompanionReceiver.on('register.error', this.onRustCompanionRegisterError);
+    if (window.RustCompanionReceiver && window.ipcRenderer) {
+      this.rustCompanionReceiver = new window.RustCompanionReceiver(window.ipcRenderer);
+      
+      // setup rust companion listeners
+      if (this.rustCompanionReceiver) {
+        this.rustCompanionReceiver.on('register.success', this.onRustCompanionRegisterSuccess);
+        this.rustCompanionReceiver.on('register.error', this.onRustCompanionRegisterError);
+      }
+    }
 
     // setup notifications
     this.setupNotifications();
@@ -482,6 +559,9 @@ export default {
       this.fcmStatusMessage = "Listening";
       console.log("FCM status updated to READY - Listening");
 
+      // Initialize notification history system on FCM registration
+      this.initializeNotificationHistory();
+
       // configure expo data
       var deviceId = window.DataStore.Config.getExpoDeviceId();
       var projectId = '49451aca-a822-41e6-ad59-955718d0ff9c';
@@ -510,6 +590,26 @@ export default {
     onFCMNotificationsReceived(data) {
       console.log("=== FCM Notification Received ===");
       console.log("Full notification data:", JSON.stringify(data, null, 2));
+
+      // Check if this notification is new based on timestamp
+      const notificationTimestamp = data.sent; // e.g., "1760739036748"
+      const lastStoredTimestamp = window.DataStore.Notifications.getLastNotificationTimestamp();
+      
+      console.log("Notification timestamp:", notificationTimestamp);
+      console.log("Last stored timestamp:", lastStoredTimestamp);
+      
+      // Convert timestamps to numbers for comparison
+      const currentNotificationTime = parseInt(notificationTimestamp);
+      const lastStoredTime = lastStoredTimestamp ? parseInt(lastStoredTimestamp) : 0;
+      
+      // Check if this notification is older than or equal to the last processed one
+      if (currentNotificationTime <= lastStoredTime) {
+        console.log("Notification is old or duplicate, skipping processing");
+        console.log(`Current: ${currentNotificationTime}, Last: ${lastStoredTime}`);
+        return;
+      }
+      
+      console.log("Notification is new, processing...");
 
       // save persistent id to data store
       window.DataStore.FCM.addPersistentId(data.persistentId);
@@ -571,13 +671,40 @@ export default {
       // handle server pairing
       if(notificationBody.type === 'server'){
         console.log("Server pairing notification detected");
-        this.lastReceivedPairNotification = notificationBody;
+        
+        // Create comprehensive pairing notification data
+        const pairingData = {
+          ...notificationBody,
+          // Extract additional data from FCM notification
+          ip: notificationBody.ip || data.appData?.find(item => item.key === 'ip')?.value,
+          port: notificationBody.port || data.appData?.find(item => item.key === 'port')?.value,
+          playerId: notificationBody.playerId || data.appData?.find(item => item.key === 'playerId')?.value,
+          playerToken: notificationBody.playerToken || data.appData?.find(item => item.key === 'playerToken')?.value,
+          name: notificationBody.name || data.appData?.find(item => item.key === 'name')?.value || 'Unknown Server',
+          serverName: notificationBody.name || notificationBody.serverName || data.appData?.find(item => item.key === 'name')?.value || 'Unknown Server',
+          desc: notificationBody.desc || notificationBody.body || data.appData?.find(item => item.key === 'desc')?.value,
+          title: notificationBody.title || 'Server Pairing Request',
+          timestamp: data.sent || Date.now(),
+          channel: 1001, // Pairing channel
+          type: 'server',
+          // Store original FCM data for reference
+          originalData: data,
+          originalBody: notificationBody
+        };
+        
+        console.log("Enhanced pairing data:", pairingData);
+        this.lastReceivedPairNotification = pairingData;
         this.isShowingPairServerModal = true;
       }
 
       // Add notification to notification center for all notifications
       console.log("Adding notification to notification center...");
       this.addRustPlusNotificationToCenter(notificationBody, data);
+      
+      // Update the last notification timestamp after successful processing
+      window.DataStore.Notifications.setLastNotificationTimestamp(data.sent);
+      console.log("Updated last notification timestamp to:", data.sent);
+      
       console.log("=== End FCM Notification Processing ===");
 
     },
@@ -661,7 +788,19 @@ export default {
         message: notificationMessage,
         channel: channel || channelId || 'unknown',
         type: notificationBody.type || 'notification',
-        data: notificationBody
+        data: notificationBody,
+        // For pairing notifications, store additional data
+        ...(notificationBody.type === 'server' ? {
+          ip: notificationBody.ip || data.appData?.find(item => item.key === 'ip')?.value,
+          port: notificationBody.port || data.appData?.find(item => item.key === 'port')?.value,
+          playerId: notificationBody.playerId || data.appData?.find(item => item.key === 'playerId')?.value,
+          playerToken: notificationBody.playerToken || data.appData?.find(item => item.key === 'playerToken')?.value,
+          name: notificationBody.name || data.appData?.find(item => item.key === 'name')?.value || 'Unknown Server',
+          serverName: notificationBody.name || notificationBody.serverName || data.appData?.find(item => item.key === 'name')?.value || 'Unknown Server',
+          desc: notificationBody.desc || notificationBody.body || data.appData?.find(item => item.key === 'desc')?.value,
+          originalData: data,
+          originalBody: notificationBody
+        } : {})
       });
       
       console.log("=== End Adding Notification to Center ===");
@@ -771,7 +910,15 @@ export default {
     setupNotifications() {
 
       // stop listening for notifications if already listening
-      this.fcmNotificationReceiver.stopListeningForNotifications();
+      if (this.fcmNotificationReceiver) {
+        this.fcmNotificationReceiver.stopListeningForNotifications();
+      }
+
+      // Check if DataStore is available
+      if (!window.DataStore || !window.DataStore.FCM) {
+        console.log("DataStore.FCM not available, skipping notification setup");
+        return;
+      }
 
       // check for existing fcm credentials
       var credentials = window.DataStore.FCM.getCredentials();
@@ -784,13 +931,17 @@ export default {
         window.DataStore.FCM.clearPersistentIds();
 
         // start listening for notifications with existing credentials
-        this.fcmNotificationReceiver.startListeningForNotifications(credentials, persistentIds);
+        if (this.fcmNotificationReceiver) {
+          this.fcmNotificationReceiver.startListeningForNotifications(credentials, persistentIds);
+        }
 
       } else {
 
         // register for a new set of fcm credentials
         this.fcmStatus = "Registering...";
-        this.fcmNotificationReceiver.register();
+        if (this.fcmNotificationReceiver) {
+          this.fcmNotificationReceiver.register();
+        }
 
       }
 
@@ -839,7 +990,9 @@ export default {
       this.selectedServer = null;
 
       // stop listening for notifications
-      this.fcmNotificationReceiver.stopListeningForNotifications();
+      if (this.fcmNotificationReceiver) {
+        this.fcmNotificationReceiver.stopListeningForNotifications();
+      }
 
     },
 
@@ -860,15 +1013,57 @@ export default {
 
     onAddServer(event) {
 
-      // get server data from event
-      var server = {
-        id: event.id || window.uuidv4(),
-        name: event.name || "New Server",
-        ip: event.ip,
-        port: event.port,
-        playerId: event.playerId,
-        playerToken: event.playerToken,
-      };
+      // Check if server with same IP and port already exists
+      const existingServers = window.DataStore.Servers.getServers();
+      const existingServer = existingServers.find(server => 
+        server.ip === event.ip && server.port === event.port
+      );
+
+      let server;
+      
+      if (existingServer) {
+        console.log("Found existing server with same IP:port", existingServer);
+        
+        // Update existing server with new pairing data
+        server = {
+          ...existingServer,
+          // Update with new pairing data if provided
+          name: event.name || existingServer.name || "New Server",
+          playerId: event.playerId || existingServer.playerId,
+          playerToken: event.playerToken || existingServer.playerToken,
+        };
+        
+        console.log("Updated server data:", server);
+        
+        // Show notification that we're connecting to existing server
+        if (window.DataStore && window.DataStore.Notifications) {
+          const connectNotification = {
+            id: window.uuidv4(),
+            title: 'Connecting to Existing Server',
+            message: `Connecting to ${server.name} with updated pairing data`,
+            type: 'info',
+            channel: 1002, // Info channel
+            timestamp: Date.now(),
+            read: false,
+            serverId: server.id,
+            serverName: server.name
+          };
+          window.DataStore.Notifications.addNotification(connectNotification);
+        }
+        
+      } else {
+        // Create new server
+        server = {
+          id: event.id || window.uuidv4(),
+          name: event.name || "New Server",
+          ip: event.ip,
+          port: event.port,
+          playerId: event.playerId,
+          playerToken: event.playerToken,
+        };
+        
+        console.log("Creating new server:", server);
+      }
 
       // add or update server
       window.DataStore.Servers.addOrUpdateServer(server);
@@ -876,8 +1071,13 @@ export default {
       // update servers in ui
       this.servers = window.DataStore.Servers.getServers();
 
-      // set server as selected
+      // set server as selected (this will automatically connect to it)
       this.selectedServer = server;
+
+      // If this was triggered by a pairing notification, close the pairing modal
+      if (this.isShowingPairServerModal) {
+        this.isShowingPairServerModal = false;
+      }
 
     },
 
@@ -969,7 +1169,17 @@ export default {
       
       console.log("Final notification object:", notification);
       
-      // Add to global notifications
+      // Store notification in server-specific storage if we have a valid server ID
+      if (notification.serverId && notification.serverId !== 'unknown') {
+        console.log("Storing notification for server:", notification.serverId);
+        window.DataStore.Notifications.addServerNotification(notification.serverId, notification);
+      } else {
+        console.log("No valid server ID, storing in global notifications");
+        // Fallback to global storage for notifications without server ID
+        window.DataStore.Notifications.addNotification(notification);
+      }
+      
+      // Add to global notifications for immediate display
       this.globalNotifications.unshift(notification);
       
       // Keep only last 100 notifications
@@ -992,6 +1202,26 @@ export default {
       }
     },
 
+    handleGlobalNotificationClick(notification) {
+      // Check if this is a pairing/server notification
+      if (notification.channel === 1001 || notification.type === 'pairing' || notification.type === 'server') {
+        // Set the pairing notification data and show modal
+        this.lastReceivedPairNotification = notification;
+        this.isShowingPairServerModal = true;
+        // Close the global notification center
+        this.isShowingGlobalNotificationCenter = false;
+      }
+      
+      // Always mark as read
+      this.markGlobalNotificationAsRead(notification.id);
+    },
+
+    truncateMessage(message, maxLength = 120) {
+      if (!message) return '';
+      if (message.length <= maxLength) return message;
+      return message.substring(0, maxLength).trim() + '...';
+    },
+
     clearAllGlobalNotifications() {
       this.globalNotifications = [];
       this.saveGlobalNotifications();
@@ -1007,6 +1237,37 @@ export default {
       if (window.DataStore && window.DataStore.Notifications) {
         this.globalNotifications = window.DataStore.Notifications.getNotifications() || [];
       }
+    },
+
+    initializeNotificationHistory() {
+      console.log("=== Initializing Notification History System ===");
+      
+      // Check if DataStore is available
+      if (!window.DataStore || !window.DataStore.Notifications) {
+        console.log("DataStore not available, skipping notification history initialization");
+        return;
+      }
+      
+      // Get existing notifications from storage
+      const existingNotifications = window.DataStore.Notifications.getNotifications() || [];
+      console.log("Existing notifications count:", existingNotifications.length);
+      
+      // Get the last stored notification timestamp
+      let lastTimestamp = window.DataStore.Notifications.getLastNotificationTimestamp();
+      
+      // If no timestamp exists and we have notifications, use the most recent one
+      if (!lastTimestamp && existingNotifications.length > 0) {
+        // Find the most recent notification timestamp
+        const mostRecentTimestamp = Math.max(...existingNotifications.map(n => n.timestamp || 0));
+        if (mostRecentTimestamp > 0) {
+          lastTimestamp = mostRecentTimestamp.toString();
+          window.DataStore.Notifications.setLastNotificationTimestamp(lastTimestamp);
+          console.log("Set initial timestamp from existing notifications:", lastTimestamp);
+        }
+      }
+      
+      console.log("Current last notification timestamp:", lastTimestamp);
+      console.log("=== Notification History System Initialized ===");
     },
 
     formatNotificationTime(timestamp) {
@@ -1124,6 +1385,12 @@ export default {
         return 'bg-indigo-100 text-indigo-800';
       }
       return 'bg-gray-100 text-gray-800';
+    },
+
+    hasGlobalContextInfo(notification) {
+      return (notification.serverName && notification.serverName !== 'Unknown Server') ||
+             notification.playerName ||
+             notification.entityName;
     }
 
   },

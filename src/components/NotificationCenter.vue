@@ -23,8 +23,11 @@
           v-for="notification in notifications" 
           :key="notification.id"
           class="notification-item"
-          :class="{ 'unread': !notification.read }"
-          @click="markAsRead(notification.id)"
+          :class="{ 
+            'unread': !notification.read,
+            'pairing-notification-item': notification.channel === 1001 || notification.type === 'pairing' || notification.type === 'server'
+          }"
+          @click="handleNotificationClick(notification)"
         >
           <div class="notification-icon" :class="getNotificationIconClass(notification)">
             <!-- Pairing notification icon -->
@@ -70,8 +73,29 @@
           </div>
           
           <div class="notification-content">
-            <div class="notification-title">{{ notification.title }}</div>
-            <div class="notification-message">{{ notification.message }}</div>
+            <!-- Special handling for pairing notifications -->
+            <div v-if="notification.channel === 1001 || notification.type === 'pairing' || notification.type === 'server'" class="notification-title pairing-title">
+              Click to Pair
+            </div>
+            <div v-else class="notification-title">{{ notification.title }}</div>
+            
+            <!-- Show server name for pairing notifications -->
+            <div v-if="notification.channel === 1001 || notification.type === 'pairing' || notification.type === 'server'" class="notification-server">
+              Server: {{ notification.name || notification.serverName || 'Unknown Server' }}
+              <span v-if="notification.ip && notification.port" class="server-details">
+                ({{ notification.ip }}:{{ notification.port }})
+              </span>
+            </div>
+            
+            <!-- Truncate description for pairing notifications -->
+            <div v-if="notification.channel === 1001 || notification.type === 'pairing' || notification.type === 'server'" class="notification-message">
+              {{ truncateDescription(notification.message || notification.desc || '', 20) }}
+              <div v-if="notification.playerId" class="player-info">
+                Player ID: {{ notification.playerId }}
+              </div>
+            </div>
+            <div v-else class="notification-message">{{ notification.message }}</div>
+            
             <div v-if="notification.entityName" class="notification-entity">
               Entity: {{ notification.entityName }} ({{ notification.entityType }})
             </div>
@@ -132,6 +156,23 @@ export default {
     },
     markAsRead(notificationId) {
       this.$emit('mark-as-read', notificationId);
+    },
+    handleNotificationClick(notification) {
+      // Check if this is a pairing notification
+      if (notification.channel === 1001 || notification.type === 'pairing' || notification.type === 'server') {
+        // Emit event to open pairing modal
+        this.$emit('open-pairing-modal', notification);
+        // Also mark as read
+        this.markAsRead(notification.id);
+      } else {
+        // For regular notifications, just mark as read
+        this.markAsRead(notification.id);
+      }
+    },
+    truncateDescription(text, maxLength) {
+      if (!text) return '';
+      if (text.length <= maxLength) return text;
+      return text.substring(0, maxLength) + '...';
     },
     clearAllNotifications() {
       this.$emit('clear-all');
@@ -306,6 +347,31 @@ export default {
   border-left: 3px solid #3b82f6;
 }
 
+.notification-item.pairing-notification-item {
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.notification-item.pairing-notification-item:hover {
+  background: rgba(245, 158, 11, 0.1);
+  border-left: 3px solid #f59e0b;
+}
+
+.notification-item.pairing-notification-item .pairing-title {
+  color: #f59e0b;
+  font-weight: 700;
+  text-transform: uppercase;
+  font-size: 12px;
+  letter-spacing: 0.5px;
+}
+
+.notification-server {
+  color: #e2e8f0;
+  font-size: 13px;
+  font-weight: 500;
+  margin-bottom: 4px;
+}
+
 .notification-item:last-child {
   border-bottom: none;
 }
@@ -379,11 +445,26 @@ export default {
 }
 
 .notification-entity,
-.notification-player {
+.notification-player,
+.notification-server {
   color: #9ca3af;
   font-size: 12px;
   font-style: italic;
   margin-bottom: 2px;
+}
+
+.server-details {
+  color: #6b7280;
+  font-size: 11px;
+  font-weight: normal;
+  margin-left: 4px;
+}
+
+.player-info {
+  color: #6b7280;
+  font-size: 11px;
+  margin-top: 4px;
+  font-style: italic;
 }
 
 .notification-time {
