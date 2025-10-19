@@ -50,6 +50,8 @@
                 </button>
               </div>
 
+
+
               <!-- Logout Button -->
               <div class="flex mb-4">
                 <button @click="isShowingLogoutModal = true" type="button" class="mx-auto inline-flex items-center p-1 border border-transparent rounded-full shadow-sm text-gray-700 bg-gray-300 hover:bg-gray-200 focus:outline-none">
@@ -149,6 +151,7 @@
     <AboutModal @close="isShowingAboutModal = false" :isShowing="isShowingAboutModal"/>
     <AddServerModal @add="onAddServer($event)" @close="isShowingAddServerModal = false" :isShowing="isShowingAddServerModal" :steamId="steamId"/>
     <PairServerModal @pair="onAddServer($event)" @close="isShowingPairServerModal = false" :isShowing="isShowingPairServerModal" :notification="lastReceivedPairNotification"/>
+    <EntityPairingModal @close="isShowingEntityPairingModal = false" :isShowing="isShowingEntityPairingModal" :entityData="lastReceivedPairNotification"/>
     <LogoutModal @close="isShowingLogoutModal = false" @logout="logout" :isShowing="isShowingLogoutModal"/>
     <RemoveServerModal @close="isShowingRemoveServerModal = false" @remove="removeServer" :isShowing="isShowingRemoveServerModal"/>
     <InfoModal @close="isShowingFcmInfoModal = false" :isShowing="isShowingFcmInfoModal" title="Firebase Cloud Messaging" message="We need to register with Firebase Cloud Messaging to be able to receive pairing notifications from the Rust+ Companion API."/>
@@ -280,21 +283,34 @@
                           <div class="flex-grow min-w-0">
                             <!-- Title and Message -->
                             <div class="mb-3">
-                              <h4 class="font-semibold text-gray-900 text-base leading-6 mb-1">
-                                {{ notification.name }}
-                              </h4>
-                              <!-- Show "Click to pair" for pairing notifications, otherwise show the message -->
-                              <p v-if="notification.channel === 1001 || notification.type === 'pairing' || notification.type === 'server'" 
-                                 class="text-sm text-orange-600 leading-5 break-words font-medium">
-                                Click to pair
-                              </p>
-                              <p v-else class="text-sm text-gray-700 leading-5 break-words">
-                                {{ truncateMessage(notification.message, 120) }}
-                              </p>
+                              <!-- Entity pairing notifications -->
+                              <div v-if="notification.channel === 1001 || notification.type === 'pairing' || notification.type === 'entity'">
+                                <!-- Server/Entity Title -->
+                                <h4 class="font-semibold text-gray-900 text-base leading-6 mb-1">
+                                  {{ notification.entityData?.name || notification.name || 'Unknown Server' }}
+                                </h4>
+                                <!-- Entity Name -->
+                                <p v-if="notification.entityData?.entityName" class="text-sm text-gray-600 leading-5 mb-2 font-medium">
+                                  {{ notification.entityData.entityName }}
+                                </p>
+                                <!-- Click to pair message -->
+                                <p class="text-sm text-orange-600 leading-5 break-words font-medium mb-2">
+                                  Click to pair with this device
+                                </p>
+                              </div>
+                              <!-- Regular notifications -->
+                              <div v-else>
+                                <h4 class="font-semibold text-gray-900 text-base leading-6 mb-1">
+                                  {{ notification.title || notification.name }}
+                                </h4>
+                                <p class="text-sm text-gray-700 leading-5 break-words">
+                                  {{ truncateMessage(notification.message, 120) }}
+                                </p>
+                              </div>
                             </div>
                             
                             <!-- Context Information Section -->
-                            <div v-if="hasGlobalContextInfo(notification) && !(notification.channel === 1001 || notification.type === 'pairing' || notification.type === 'server')" class="mb-3">
+                            <div v-if="hasGlobalContextInfo(notification) && !(notification.channel === 1001 || notification.type === 'pairing' || notification.type === 'server' || notification.type === 'entity' || notification.type === 'entity_pairing' || notification.type === 'alarm')" class="mb-3">
                               <div class="bg-gray-50 rounded-lg p-3 space-y-2">
                                 <h5 class="text-xs font-semibold text-gray-600 uppercase tracking-wide mb-2">Context</h5>
                                 
@@ -390,6 +406,7 @@ import AboutModal from "@/components/modals/AboutModal";
 import InfoModal from "@/components/modals/InfoModal";
 import AddServerModal from "@/components/modals/AddServerModal";
 import PairServerModal from "@/components/modals/PairServerModal";
+import EntityPairingModal from "@/components/modals/EntityPairingModal";
 import LogoutModal from "@/components/modals/LogoutModal";
 import RemoveServerModal from "@/components/modals/RemoveServerModal";
 import ConnectRustPlus from '@/components/ConnectRustPlus.vue'
@@ -412,6 +429,7 @@ export default {
     LogoutModal,
     AddServerModal,
     PairServerModal,
+    EntityPairingModal,
     ConnectRustPlus,
     ServerSidePanel,
     RustPlus,
@@ -443,6 +461,7 @@ export default {
       isShowingAboutModal: false,
       isShowingAddServerModal: false,
       isShowingPairServerModal: false,
+      isShowingEntityPairingModal: false,
       isShowingLogoutModal: false,
       isShowingRemoveServerModal: false,
 
@@ -668,8 +687,39 @@ export default {
         console.log("Will still try to add to notification center...");
       }
 
-      // handle server pairing
-      if(notificationBody.type === 'server'){
+      // Check if this is an entity/switch pairing notification first (priority over server pairing)
+      const isEntityPairingNotification = notificationBody.entityId && notificationBody.entityName && notificationBody.entityType;
+      
+      if (isEntityPairingNotification) {
+        console.log("Entity pairing notification detected (switch/device pairing)");
+        
+        // Create entity pairing notification data
+        const entityPairingData = {
+          ...notificationBody,
+          // Extract additional data from FCM notification
+          ip: notificationBody.ip || data.appData?.find(item => item.key === 'ip')?.value,
+          port: notificationBody.port || data.appData?.find(item => item.key === 'port')?.value,
+          playerId: notificationBody.playerId || data.appData?.find(item => item.key === 'playerId')?.value,
+          playerToken: notificationBody.playerToken || data.appData?.find(item => item.key === 'playerToken')?.value,
+          name: notificationBody.name || data.appData?.find(item => item.key === 'name')?.value || 'Unknown Server',
+          serverName: notificationBody.name || notificationBody.serverName || data.appData?.find(item => item.key === 'name')?.value || 'Unknown Server',
+          desc: notificationBody.desc || notificationBody.body || data.appData?.find(item => item.key === 'desc')?.value,
+          title: notificationBody.title || `${notificationBody.entityName} Pairing Request`,
+          timestamp: data.sent || Date.now(),
+          type: 'entity_pairing',
+          // Store original FCM data for reference
+          originalData: data,
+          originalBody: notificationBody,
+          // Ensure we use the currently selected server's ID if available
+          serverId: this.selectedServer ? this.selectedServer.id : (data.appData?.find(item => item.key === 'google.c.sender.id')?.value)
+        };
+        
+        console.log("Enhanced entity pairing data:", entityPairingData);
+        this.lastReceivedPairNotification = entityPairingData;
+        this.isShowingEntityPairingModal = true;
+      }
+      // handle server pairing (only if not an entity pairing)
+      else if(notificationBody.type === 'server'){
         console.log("Server pairing notification detected");
         
         // Create comprehensive pairing notification data
@@ -721,13 +771,22 @@ export default {
       const channelId = data.appData?.find(item => item.key === 'channelId')?.value;
       const androidChannelId = data.appData?.find(item => item.key === 'gcm.notification.android_channel_id')?.value;
       
+      // Extract server ID from google.c.sender.id
+      const serverId = data.appData?.find(item => item.key === 'google.c.sender.id')?.value;
+      
       console.log("Extracted channel:", channel);
       console.log("Extracted channelId:", channelId);
       console.log("Extracted android_channel_id:", androidChannelId);
+      console.log("Extracted server ID:", serverId);
       
       // Default values from notification body
       let notificationMessage = notificationBody.body || notificationBody.desc || '';
       let notificationTitle = notificationBody.title || 'Rust+ Notification';
+      let entityData = null;
+      
+      // Check if this is a smart switch/entity notification
+      const isEntityNotification = notificationBody.type === 'entity' || 
+                                   (notificationBody.entityId && notificationBody.entityName && notificationBody.entityType);
       
       // Check if this is an alarm notification by multiple criteria
       const isAlarmNotification = 
@@ -736,7 +795,60 @@ export default {
         androidChannelId === 'alarm' ||
         notificationBody.type === 'alarm';
       
-      if (isAlarmNotification) {
+      if (isEntityNotification) {
+        console.log("=== ENTITY NOTIFICATION DETECTED ===");
+        
+        // For smart switch notifications, use notification.data structure
+        entityData = {
+          entityId: notificationBody.entityId,
+          entityName: notificationBody.entityName,
+          entityType: notificationBody.entityType,
+          desc: notificationBody.desc,
+          ip: notificationBody.ip,
+          port: notificationBody.port,
+          playerId: notificationBody.playerId,
+          playerToken: notificationBody.playerToken,
+          name: notificationBody.name, // Server name
+          serverId: serverId,
+          type: notificationBody.type,
+          id: notificationBody.id,
+          img: notificationBody.img,
+          logo: notificationBody.logo,
+          url: notificationBody.url
+        };
+        
+        // Use entity name as title and description as message for smart switches
+        notificationTitle = `${notificationBody.entityName} (${notificationBody.entityType === '1' ? 'Smart Switch' : 'Entity'})`;
+        notificationMessage = notificationBody.desc || 'Entity notification';
+        
+        console.log("Entity data extracted:", entityData);
+        console.log("Final entity title:", notificationTitle);
+        console.log("Final entity message:", notificationMessage);
+        
+        // Auto-open entity pairing modal if application is open and this is a pairing request
+        if (notificationBody.type === 'entity' || notificationBody.type === 'entity_pairing') {
+          console.log("=== AUTO-OPENING ENTITY PAIRING MODAL ===");
+          
+          // Ensure we use the currently selected server's ID if available
+          const currentServerId = this.selectedServer ? this.selectedServer.id : serverId;
+          const currentServerName = this.selectedServer ? this.selectedServer.name : entityData.name;
+          
+          console.log("Using server ID:", currentServerId);
+          console.log("Using server name:", currentServerName);
+          
+          this.lastReceivedPairNotification = {
+            ...entityData,
+            serverId: currentServerId,
+            serverName: currentServerName,
+            title: notificationTitle,
+            message: notificationMessage,
+            timestamp: Date.now(),
+            type: 'entity_pairing'
+          };
+          this.isShowingEntityPairingModal = true;
+        }
+        
+      } else if (isAlarmNotification) {
         console.log("=== ALARM NOTIFICATION DETECTED ===");
         
         // Look for message and title in appData (prioritize these over notification body)
@@ -764,6 +876,38 @@ export default {
         
         console.log("Final alarm title:", notificationTitle);
         console.log("Final alarm message:", notificationMessage);
+        
+        // Check if alarm notification has entity ID and trigger alarm device if device modal is open
+        const entityId = notificationBody.entityId || data.appData?.find(item => item.key === 'entityId')?.value;
+        if (entityId) {
+          console.log("=== ALARM TRIGGER LOGIC ===");
+          console.log("Alarm notification has entity ID:", entityId);
+          
+          // Check if any device modal is open by checking all RustPlus components
+          const rustPlusComponents = this.$refs.rustPlusComponent ? [this.$refs.rustPlusComponent] : [];
+          if (this.$refs.rustPlusComponents) {
+            rustPlusComponents.push(...this.$refs.rustPlusComponents);
+          }
+          
+          let isDeviceModalOpen = false;
+          for (const component of rustPlusComponents) {
+            if (component && component.isShowingDeviceControlModal) {
+              isDeviceModalOpen = true;
+              break;
+            }
+          }
+          
+          console.log("Device modal open:", isDeviceModalOpen);
+          
+          if (isDeviceModalOpen) {
+            console.log("Triggering alarm device with entity ID:", entityId);
+            this.triggerAlarmDevice(entityId, serverId);
+          } else {
+            console.log("Device modal not open, skipping alarm trigger");
+          }
+        } else {
+          console.log("No entity ID found in alarm notification");
+        }
       }
       
       console.log("Notification title:", notificationTitle);
@@ -783,25 +927,53 @@ export default {
       }
       
       // Always add to global notification center regardless of server selection
-      this.addGlobalNotification({
-        title: notificationTitle,
-        message: notificationMessage,
-        channel: channel || channelId || 'unknown',
-        type: notificationBody.type || 'notification',
-        data: notificationBody,
-        // For pairing notifications, store additional data
-        ...(notificationBody.type === 'server' ? {
-          ip: notificationBody.ip || data.appData?.find(item => item.key === 'ip')?.value,
-          port: notificationBody.port || data.appData?.find(item => item.key === 'port')?.value,
-          playerId: notificationBody.playerId || data.appData?.find(item => item.key === 'playerId')?.value,
-          playerToken: notificationBody.playerToken || data.appData?.find(item => item.key === 'playerToken')?.value,
-          name: notificationBody.name || data.appData?.find(item => item.key === 'name')?.value || 'Unknown Server',
-          serverName: notificationBody.name || notificationBody.serverName || data.appData?.find(item => item.key === 'name')?.value || 'Unknown Server',
-          desc: notificationBody.desc || notificationBody.body || data.appData?.find(item => item.key === 'desc')?.value,
-          originalData: data,
-          originalBody: notificationBody
-        } : {})
-      });
+      // For alarm notifications, create a simplified notification with only title and message
+      if (isAlarmNotification) {
+        this.addGlobalNotification({
+          title: notificationTitle,
+          message: notificationMessage,
+          channel: channel || channelId || 'unknown',
+          type: 'smart_alarm',
+          data: {}, // Empty data object for alarm notifications
+          serverId: 'unknown' // No server context for simplified alarm notifications
+        });
+      } else {
+        // For non-alarm notifications, include full context as before
+        this.addGlobalNotification({
+          title: notificationTitle,
+          message: notificationMessage,
+          channel: channel || channelId || 'unknown',
+          type: notificationBody.type || 'notification',
+          data: notificationBody,
+          serverId: serverId, // Use google.c.sender.id as server ID
+          // For pairing notifications, store additional data
+          ...(notificationBody.type === 'server' ? {
+            ip: notificationBody.ip || data.appData?.find(item => item.key === 'ip')?.value,
+            port: notificationBody.port || data.appData?.find(item => item.key === 'port')?.value,
+            playerId: notificationBody.playerId || data.appData?.find(item => item.key === 'playerId')?.value,
+            playerToken: notificationBody.playerToken || data.appData?.find(item => item.key === 'playerToken')?.value,
+            name: notificationBody.name || data.appData?.find(item => item.key === 'name')?.value || 'Unknown Server',
+            serverName: notificationBody.name || notificationBody.serverName || data.appData?.find(item => item.key === 'name')?.value || 'Unknown Server',
+            desc: notificationBody.desc || notificationBody.body || data.appData?.find(item => item.key === 'desc')?.value,
+            originalData: data,
+            originalBody: notificationBody
+          } : {}),
+          // For entity notifications, store entity data
+          ...(isEntityNotification ? {
+            entityData: entityData,
+            entityId: entityData.entityId,
+            entityName: entityData.entityName,
+            entityType: entityData.entityType,
+            ip: entityData.ip,
+            port: entityData.port,
+            playerId: entityData.playerId,
+            playerToken: entityData.playerToken,
+            serverName: entityData.name,
+            originalData: data,
+            originalBody: notificationBody
+          } : {})
+        });
+      }
       
       console.log("=== End Adding Notification to Center ===");
     },
@@ -1203,8 +1375,16 @@ export default {
     },
 
     handleGlobalNotificationClick(notification) {
+      // Check if this is an entity pairing notification
+      if (notification.type === 'entity' || notification.type === 'entity_pairing') {
+        // Set the entity notification data and show entity pairing modal
+        this.lastReceivedPairNotification = notification;
+        this.isShowingEntityPairingModal = true;
+        // Close the global notification center
+        this.isShowingGlobalNotificationCenter = false;
+      }
       // Check if this is a pairing/server notification
-      if (notification.channel === 1001 || notification.type === 'pairing' || notification.type === 'server') {
+      else if (notification.channel === 1001 || notification.type === 'pairing' || notification.type === 'server') {
         // Set the pairing notification data and show modal
         this.lastReceivedPairNotification = notification;
         this.isShowingPairServerModal = true;
@@ -1364,6 +1544,8 @@ export default {
         return 'Team Changed';
       } else if (notification.type === 'entity_changed') {
         return 'Entity Changed';
+      } else if (notification.type === 'entity' || notification.type === 'entity_pairing') {
+        return 'Entity';
       }
       return null;
     },
@@ -1383,6 +1565,8 @@ export default {
         return 'bg-purple-100 text-purple-800';
       } else if (notification.type === 'entity_changed') {
         return 'bg-indigo-100 text-indigo-800';
+      } else if (notification.type === 'entity' || notification.type === 'entity_pairing') {
+        return 'bg-cyan-100 text-cyan-800';
       }
       return 'bg-gray-100 text-gray-800';
     },
@@ -1391,6 +1575,59 @@ export default {
       return (notification.serverName && notification.serverName !== 'Unknown Server') ||
              notification.playerName ||
              notification.entityName;
+    },
+
+    // Trigger alarm device to show "triggered" state for 5 seconds
+    async triggerAlarmDevice(entityId, serverId) {
+      try {
+        console.log("=== TRIGGERING ALARM DEVICE ===");
+        console.log("Entity ID:", entityId, "Server ID:", serverId);
+        
+        // Find the alarm device in the DataStore
+        if (!window.DataStore || !window.DataStore.Entities) {
+          console.error("DataStore not available");
+          return;
+        }
+        
+        const entities = window.DataStore.Entities.getServerEntities(serverId);
+        const alarmDevice = entities.find(entity => 
+          entity.entityId === entityId && 
+          (entity.entityType === 2 || entity.entityType === '2')
+        );
+        
+        if (!alarmDevice) {
+          console.error("Alarm device not found with entity ID:", entityId);
+          return;
+        }
+        
+        console.log("Found alarm device:", alarmDevice);
+        
+        // Store original status
+        const originalStatus = alarmDevice.status;
+        console.log("Original status:", originalStatus);
+        
+        // Set status to "triggered"
+        alarmDevice.status = 'triggered';
+        alarmDevice.lastUpdated = new Date().toISOString();
+        
+        // Update in DataStore
+        window.DataStore.Entities.addOrUpdateServerEntity(serverId, alarmDevice);
+        console.log("Alarm device status set to 'triggered'");
+        
+        // Revert back to original status after 5 seconds
+        setTimeout(() => {
+          console.log("=== REVERTING ALARM STATUS ===");
+          alarmDevice.status = originalStatus || 'monitoring';
+          alarmDevice.lastUpdated = new Date().toISOString();
+          
+          // Update in DataStore
+          window.DataStore.Entities.addOrUpdateServerEntity(serverId, alarmDevice);
+          console.log("Alarm device status reverted to:", alarmDevice.status);
+        }, 5000);
+        
+      } catch (error) {
+        console.error("Error triggering alarm device:", error);
+      }
     }
 
   },

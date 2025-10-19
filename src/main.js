@@ -1,5 +1,6 @@
 import Vue from 'vue'
 import App from '@/App.vue'
+import EntityControlService from '@/js/services/EntityControlService';
 
 // add globals
 window.Long = require('long');
@@ -34,6 +35,9 @@ Vue.use(VueCookie);
 // add timeago
 import VueTimeago from 'vue-timeago'
 Vue.use(VueTimeago, {});
+
+// Make EntityControlService globally available
+Vue.prototype.$entityControlService = EntityControlService;
 
 // render vue app
 new Vue({

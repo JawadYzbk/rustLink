@@ -13,6 +13,7 @@ window.DataStore = {
     FCM: require('@/js/datastore/FCMDataStore'),
     Servers: require('@/js/datastore/ServerDataStore'),
     Notifications: require('@/js/datastore/NotificationDataStore'),
+    Entities: require('@/js/datastore/EntityDataStore'),
 };
 
 /**

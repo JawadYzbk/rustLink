@@ -73,13 +73,17 @@
           </div>
           
           <div class="notification-content">
-            <!-- Special handling for pairing notifications -->
+            <!-- Special handling for server pairing notifications -->
             <div v-if="notification.channel === 1001 || notification.type === 'pairing' || notification.type === 'server'" class="notification-title pairing-title">
               Click to Pair
             </div>
+            <!-- Special handling for entity pairing notifications -->
+            <div v-else-if="notification.type === 'entity' || notification.type === 'entity_pairing'" class="notification-title pairing-title">
+              {{ notification.entityName || notification.title || 'Entity' }}
+            </div>
             <div v-else class="notification-title">{{ notification.title }}</div>
             
-            <!-- Show server name for pairing notifications -->
+            <!-- Show server name for server pairing notifications -->
             <div v-if="notification.channel === 1001 || notification.type === 'pairing' || notification.type === 'server'" class="notification-server">
               Server: {{ notification.name || notification.serverName || 'Unknown Server' }}
               <span v-if="notification.ip && notification.port" class="server-details">
@@ -87,14 +91,34 @@
               </span>
             </div>
             
-            <!-- Truncate description for pairing notifications -->
+            <!-- Show entity info for entity pairing notifications -->
+            <div v-else-if="notification.type === 'entity' || notification.type === 'entity_pairing'" class="notification-server">
+              {{ getEntityTypeDisplay(notification.entityType) }}
+              <span v-if="notification.serverName" class="server-details">
+                on {{ notification.serverName }}
+              </span>
+            </div>
+            
+            <!-- Show regular notification server info -->
+            <div v-else-if="notification.serverName && notification.serverName !== 'Unknown Server'" class="notification-server">
+              Server: {{ notification.serverName }}
+            </div>
+            
+            <!-- Truncate description for server pairing notifications -->
             <div v-if="notification.channel === 1001 || notification.type === 'pairing' || notification.type === 'server'" class="notification-message">
               {{ truncateDescription(notification.message || notification.desc || '', 20) }}
               <div v-if="notification.playerId" class="player-info">
                 Player ID: {{ notification.playerId }}
               </div>
             </div>
-            <div v-else class="notification-message">{{ notification.message }}</div>
+            
+            <!-- Show entity pairing message -->
+            <div v-else-if="notification.type === 'entity' || notification.type === 'entity_pairing'" class="notification-message">
+              Click to pair with this device
+            </div>
+            
+            <!-- Show regular notification message -->
+            <div v-else class="notification-message">{{ truncateDescription(notification.message, 30) }}</div>
             
             <div v-if="notification.entityName" class="notification-entity">
               Entity: {{ notification.entityName }} ({{ notification.entityType }})
@@ -164,6 +188,11 @@ export default {
         this.$emit('open-pairing-modal', notification);
         // Also mark as read
         this.markAsRead(notification.id);
+      } else if (notification.type === 'entity' || notification.type === 'entity_pairing') {
+        // Emit event to open entity pairing modal
+        this.$emit('open-entity-pairing-modal', notification);
+        // Also mark as read
+        this.markAsRead(notification.id);
       } else {
         // For regular notifications, just mark as read
         this.markAsRead(notification.id);
@@ -214,6 +243,14 @@ export default {
         const days = Math.floor(diffInMinutes / 1440);
         return `${days}d ago`;
       }
+    },
+    getEntityTypeDisplay(entityType) {
+      const typeMap = {
+        1: 'Smart Switch',
+        2: 'Smart Alarm', 
+        3: 'Storage Monitor'
+      };
+      return typeMap[entityType] || 'Entity';
     }
   },
   watch: {

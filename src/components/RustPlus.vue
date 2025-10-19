@@ -34,8 +34,18 @@
           @mark-as-read="markNotificationAsRead"
           @clear-all="clearAllNotifications"
           @open-pairing-modal="openPairingModal"
+          @open-entity-pairing-modal="openEntityPairingModal"
           class="mr-2 mt-1"
         />
+
+        <!-- device control button -->
+        <button v-if="status === 'connected'" @click="isShowingDeviceControlModal = !isShowingDeviceControlModal" type="button"
+          class="mr-2 my-auto inline-flex items-center px-3 py-2 border border-transparent shadow-sm text-sm leading-4 font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none" title="Device Control">
+          <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 3v2m6-2v2M9 19v2m6-2v2M5 9H3m2 6H3m18-6h-2m2 6h-2M7 19h10a2 2 0 002-2V7a2 2 0 00-2-2H7a2 2 0 00-2 2v10a2 2 0 002 2zM9 9h6v6H9V9z"></path>
+          </svg>
+          <span class="ml-2">Devices</span>
+        </button>
 
         <!-- search vending machines button -->
         <button v-if="status !== 'none' || status !== 'error'" @click="showVendingMachineSearch" type="button"
@@ -519,6 +529,7 @@
 
     <!-- modals -->
     <ItemModal @close="isShowingItemModal = false" :isShowing="isShowingItemModal" :itemId="selectedItemId" />
+    <DeviceControlModal @close="isShowingDeviceControlModal = false" :isShowing="isShowingDeviceControlModal" :server="server" />
 
   </div>
 </template>
@@ -530,7 +541,9 @@ import ServerError from "@/components/ServerError";
 import VendingMachineContents from "@/components/VendingMachineContents";
 import VendingMachineSearch from "@/components/VendingMachineSearch";
 import ItemModal from "@/components/modals/ItemModal";
+import DeviceControlModal from "@/components/modals/DeviceControlModal";
 import NotificationCenter from "@/components/NotificationCenter";
+import EntityControlService from "@/js/services/EntityControlService";
 
 export default {
   name: 'RustPlus',
@@ -548,6 +561,7 @@ export default {
     VendingMachineContents,
     VendingMachineSearch,
     ItemModal,
+    DeviceControlModal,
     NotificationCenter,
   },
   props: {
@@ -613,6 +627,7 @@ export default {
 
       isShowingItemModal: false,
       isShowingVendingMachineSearch: false,
+      isShowingDeviceControlModal: false,
 
       isShowingTeamChat: false,
       teamChatMessageText: null,
@@ -631,6 +646,9 @@ export default {
     // lookup proto types
     this.AppRequest = this.protospec.lookupType("rustplus.AppRequest");
     this.AppMessage = this.protospec.lookupType("rustplus.AppMessage");
+
+    // Set up EntityControlService with this component reference
+    EntityControlService.setRustPlusComponent(this);
 
     // load saved notifications from persistent storage
     this.loadNotificationsFromStorage();
@@ -916,25 +934,41 @@ export default {
 
           console.log(message);
 
-          // Add notification for entity change
+          // Handle entity state change notifications
           const entityInfo = message.broadcast.entityChanged.entityInfo;
-          let entityName = 'Entity';
           
-          if (entityInfo && entityInfo.type) {
-            switch (entityInfo.type) {
-              case 1: entityName = 'Switch'; break;
-              case 2: entityName = 'Alarm'; break;
-              case 3: entityName = 'Storage Monitor'; break;
-              default: entityName = `Entity (${entityInfo.type})`;
+          if (entityInfo && entityInfo.entityId) {
+            // Update entity status in DataStore
+            if (window.DataStore && window.DataStore.Entities && this.$entityControlService) {
+              const status = this.$entityControlService.getEntityStatusDescription(entityInfo);
+              window.DataStore.Entities.updateEntityStatus(this.server.id, entityInfo.entityId, {
+                status: status,
+                lastStatusUpdate: new Date().toISOString()
+              });
             }
+            
+            // Update device modal if it's open
+            if (this.isShowingDeviceControlModal && this.$refs.deviceControlModal) {
+              this.$refs.deviceControlModal.updateDeviceStateFromNotification(entityInfo.entityId, entityInfo);
+            }
+            
+            // Optional: Add notification for entity changes (currently disabled per user request)
+            // let entityName = 'Entity';
+            // if (entityInfo && entityInfo.type) {
+            //   switch (entityInfo.type) {
+            //     case 1: entityName = 'Switch'; break;
+            //     case 2: entityName = 'Alarm'; break;
+            //     case 3: entityName = 'Storage Monitor'; break;
+            //     default: entityName = `Entity (${entityInfo.type})`;
+            //   }
+            // }
+            // this.addNotification(
+            //   'entity_changed',
+            //   'Entity Status Changed',
+            //   `${entityName} status has been updated`,
+            //   message.broadcast.entityChanged
+            // );
           }
-
-          this.addNotification(
-            'entity_changed',
-            'Entity Status Changed',
-            `${entityName} status has been updated`,
-            message.broadcast.entityChanged
-          );
 
         } else {
           console.log(message);
@@ -1406,9 +1440,32 @@ export default {
           notification.serverName = data.name || notification.serverName;
           notification.type = data.type; // death, login, server, entity
           
+          // Check if this is an entity pairing notification first
+          const isEntityPairingNotification = data.entityId && data.entityName && data.entityType;
+          
+          if (isEntityPairingNotification) {
+            console.log("=== Entity Pairing Notification Detected in RustPlus ===");
+            console.log("Original data:", data);
+            
+            // Extract entity pairing information
+            notification.ip = data.ip;
+            notification.port = data.port;
+            notification.playerId = data.playerId;
+            notification.playerToken = data.playerToken;
+            notification.name = data.name || data.serverName || 'Unknown Server';
+            notification.serverName = data.name || data.serverName || 'Unknown Server';
+            notification.desc = data.desc || data.body || message;
+            notification.type = 'entity_pairing'; // Set correct type for entity pairing
+            
+            // Store original notification body for reference
+            notification.originalData = data;
+            
+            console.log("Enhanced entity pairing notification:", notification);
+            console.log("=== End Entity Pairing Data Capture ===");
+          }
           // Enhanced pairing data capture for server pairing notifications (channel 1001)
-          if (typeOrChannel === 1001 || data.type === 'server' || data.type === 'pairing') {
-            console.log("=== Capturing Pairing Data in NotificationCenter ===");
+          else if (typeOrChannel === 1001 || data.type === 'server' || (data.type === 'pairing' && !isEntityPairingNotification)) {
+            console.log("=== Capturing Server Pairing Data in NotificationCenter ===");
             console.log("Original data:", data);
             
             // Extract comprehensive pairing information
@@ -1419,13 +1476,13 @@ export default {
             notification.name = data.name || data.serverName || 'Unknown Server';
             notification.serverName = data.name || data.serverName || 'Unknown Server';
             notification.desc = data.desc || data.body || message;
-            notification.type = 'pairing'; // Ensure consistent type for pairing notifications
+            notification.type = 'pairing'; // Ensure consistent type for server pairing notifications
             
             // Store original notification body for reference
             notification.originalData = data;
             
-            console.log("Enhanced pairing notification:", notification);
-            console.log("=== End Pairing Data Capture ===");
+            console.log("Enhanced server pairing notification:", notification);
+            console.log("=== End Server Pairing Data Capture ===");
           }
         }
       } else {
@@ -1462,6 +1519,13 @@ export default {
       this.$parent.lastReceivedPairNotification = notification;
       // Open the pairing modal
       this.$parent.isShowingPairServerModal = true;
+    },
+
+    openEntityPairingModal(notification) {
+      // Set the notification data for the entity pairing modal
+      this.$parent.lastReceivedPairNotification = notification;
+      // Open the entity pairing modal
+      this.$parent.isShowingEntityPairingModal = true;
     },
 
     clearAllNotifications() {
