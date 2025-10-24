@@ -1,107 +1,188 @@
-import React, { useState } from 'react';
-import { useAppStore } from '../stores/appStore';
+import React, { useEffect, useState } from 'react';
+import { useAppStore } from '@/stores/appStore';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Badge } from '@/components/ui/badge';
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import { Loader2, Shield, Zap, Users, Server } from 'lucide-react';
 
 const ConnectRustPlus: React.FC = () => {
   const [isConnecting, setIsConnecting] = useState(false);
-  const setAuthentication = useAppStore((state) => state.setAuthentication);
+  const { setAuthentication } = useAppStore();
 
-  const handleConnect = async () => {
+  useEffect(() => {
+    // Set up the IPC listener for successful authentication
+    const handleRustPlusConnected = (data: { steamId: string; token: string }) => {
+      console.log('Rust+ authentication successful:', data);
+      setAuthentication(data.steamId, data.token);
+      setIsConnecting(false);
+    };
+
+    // Set up the IPC listener for cancelled authentication
+    const handleRustPlusConnectionCancelled = () => {
+      console.log('Rust+ authentication cancelled');
+      setIsConnecting(false);
+    };
+
+    // Register the listeners
+    window.electronAPI?.onRustPlusConnected(handleRustPlusConnected);
+    window.electronAPI?.onRustPlusConnectionCancelled(handleRustPlusConnectionCancelled);
+
+    // Cleanup listeners on component unmount
+    return () => {
+      window.electronAPI?.removeRustPlusListener();
+    };
+  }, [setAuthentication]);
+
+  const handleConnectWithRustPlus = async () => {
     setIsConnecting(true);
-    
     try {
-      // Simulate authentication process
-      // In the real app, this would integrate with Steam/Rust+ authentication
-      await new Promise(resolve => setTimeout(resolve, 2000));
-      
-      // Mock authentication data
-      const mockSteamId = '76561198000000000';
-      const mockToken = 'mock-rust-plus-token';
-      
-      setAuthentication(mockSteamId, mockToken);
+      // Trigger the Steam authentication flow
+      await window.electronAPI?.connectWithRustPlus();
     } catch (error) {
-      console.error('Authentication failed:', error);
-    } finally {
+      console.error('Failed to connect with Rust+:', error);
       setIsConnecting(false);
     }
   };
 
-  return (
-    <div className="min-h-screen bg-gray-900 flex items-center justify-center">
-      <div className="max-w-md w-full space-y-8 p-8">
-        <div className="text-center">
-          <div className="mx-auto h-24 w-24 bg-orange-500 rounded-full flex items-center justify-center mb-8">
-            <svg className="h-12 w-12 text-white" fill="currentColor" viewBox="0 0 24 24">
-              <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
-            </svg>
-          </div>
-          
-          <h2 className="text-3xl font-bold text-white mb-2">
-            Welcome to RustLink
-          </h2>
-          
-          <p className="text-gray-400 mb-8">
-            Connect your Steam account to access Rust+ features and manage your servers remotely.
-          </p>
-        </div>
+  const features = [
+    {
+      icon: <Server className="h-5 w-5" />,
+      title: "Server Management",
+      description: "Connect and manage multiple Rust servers"
+    },
+    {
+      icon: <Users className="h-5 w-5" />,
+      title: "Team Communication",
+      description: "Stay connected with your team members"
+    },
+    {
+      icon: <Zap className="h-5 w-5" />,
+      title: "Smart Devices",
+      description: "Control switches, alarms, and storage monitors"
+    },
+    {
+      icon: <Shield className="h-5 w-5" />,
+      title: "Secure Connection",
+      description: "Official Rust+ API integration"
+    }
+  ];
 
-        <div className="space-y-6">
-          <div className="bg-gray-800 rounded-lg p-6 border border-gray-700">
-            <h3 className="text-lg font-semibold text-white mb-4">
-              Getting Started
-            </h3>
-            
-            <div className="space-y-3 text-sm text-gray-300">
-              <div className="flex items-start space-x-3">
-                <span className="flex-shrink-0 w-6 h-6 bg-blue-600 text-white rounded-full flex items-center justify-center text-xs font-bold">
-                  1
-                </span>
-                <span>Connect your Steam account</span>
-              </div>
-              
-              <div className="flex items-start space-x-3">
-                <span className="flex-shrink-0 w-6 h-6 bg-blue-600 text-white rounded-full flex items-center justify-center text-xs font-bold">
-                  2
-                </span>
-                <span>Pair with your Rust+ mobile app</span>
-              </div>
-              
-              <div className="flex items-start space-x-3">
-                <span className="flex-shrink-0 w-6 h-6 bg-blue-600 text-white rounded-full flex items-center justify-center text-xs font-bold">
-                  3
-                </span>
-                <span>Manage your servers and devices</span>
-              </div>
+  return (
+    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 flex items-center justify-center p-4">
+      <div className="w-full max-w-4xl">
+        {/* Header Section */}
+        <div className="text-center mb-8">
+          <div className="flex justify-center mb-6">
+            <div className="relative">
+              <div className="absolute inset-0 bg-orange-500/20 blur-xl rounded-full"></div>
+              <Avatar className="h-24 w-24 border-4 border-orange-500/30 relative">
+                <AvatarImage src="/images/logo-no-text.png" alt="RustLink" />
+                <AvatarFallback className="bg-orange-500 text-white text-2xl font-bold">RL</AvatarFallback>
+              </Avatar>
             </div>
           </div>
+          
+          <h1 className="text-4xl font-bold text-white mb-2">
+            Welcome to <span className="text-orange-500">RustLink</span>
+          </h1>
+          <p className="text-slate-400 text-lg mb-4">
+            The ultimate companion for Rust server management
+          </p>
+          <Badge variant="secondary" className="bg-orange-500/10 text-orange-400 border-orange-500/20">
+            Unofficial Native Rust+ Client
+          </Badge>
+        </div>
 
-          <button
-            onClick={handleConnect}
-            disabled={isConnecting}
-            className="w-full bg-orange-600 hover:bg-orange-700 disabled:bg-orange-800 text-white font-semibold py-3 px-4 rounded-lg transition-colors flex items-center justify-center space-x-2"
-          >
-            {isConnecting ? (
-              <>
-                <svg className="animate-spin h-5 w-5" fill="none" viewBox="0 0 24 24">
-                  <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"/>
-                  <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"/>
-                </svg>
-                <span>Connecting...</span>
-              </>
-            ) : (
-              <>
-                <svg className="h-5 w-5" fill="currentColor" viewBox="0 0 24 24">
-                  <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
-                </svg>
-                <span>Connect with Steam</span>
-              </>
-            )}
-          </button>
+        {/* Main Content */}
+        <div className="grid md:grid-cols-2 gap-8 mb-8">
+          {/* Connection Card */}
+          <Card className="bg-slate-800/50 border-slate-700 backdrop-blur-sm">
+            <CardHeader>
+              <CardTitle className="text-white flex items-center gap-2">
+                <Shield className="h-5 w-5 text-orange-500" />
+                Connect to Rust+
+              </CardTitle>
+              <CardDescription className="text-slate-400">
+                Authenticate with Steam to access the official Rust+ Companion API and start managing your servers.
+              </CardDescription>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              <Button 
+                onClick={handleConnectWithRustPlus}
+                disabled={isConnecting}
+                size="lg"
+                className="w-full bg-orange-600 hover:bg-orange-700 text-white font-medium"
+              >
+                {isConnecting ? (
+                  <>
+                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                    Connecting...
+                  </>
+                ) : (
+                  <>
+                    <svg className="mr-2 h-4 w-4" viewBox="0 0 24 24" fill="currentColor">
+                      <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
+                    </svg>
+                    Connect with Steam
+                  </>
+                )}
+              </Button>
+              
+              <div className="text-xs text-slate-500 text-center">
+                Secure authentication through Steam's official API
+              </div>
+            </CardContent>
+          </Card>
 
-          <div className="text-center">
-            <p className="text-xs text-gray-500">
-              By connecting, you agree to share your Steam ID with RustLink for Rust+ integration.
-            </p>
+          {/* Features Overview */}
+          <Card className="bg-slate-800/50 border-slate-700 backdrop-blur-sm">
+            <CardHeader>
+              <CardTitle className="text-white">What you can do</CardTitle>
+              <CardDescription className="text-slate-400">
+                Powerful features to enhance your Rust gaming experience
+              </CardDescription>
+            </CardHeader>
+            <CardContent>
+              <div className="grid grid-cols-2 gap-3">
+                {features.map((feature, index) => (
+                  <div key={index} className="flex flex-col items-center text-center p-3 rounded-lg bg-slate-700/30 border border-slate-600/30">
+                    <div className="text-orange-500 mb-2">
+                      {feature.icon}
+                    </div>
+                    <h4 className="text-white text-sm font-medium mb-1">
+                      {feature.title}
+                    </h4>
+                    <p className="text-slate-400 text-xs">
+                      {feature.description}
+                    </p>
+                  </div>
+                ))}
+              </div>
+            </CardContent>
+          </Card>
+        </div>
+
+        {/* Footer */}
+        <div className="text-center">
+          <div className="flex items-center justify-center gap-2 text-slate-400 text-sm mb-2">
+            <span>Developed with</span>
+            <svg className="w-4 h-4 text-red-500" fill="currentColor" viewBox="0 0 24 24">
+              <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
+            </svg>
+            <span>by</span>
+            <a 
+              href="https://github.com/JawadYzbk" 
+              target="_blank" 
+              rel="noopener noreferrer"
+              className="text-orange-400 hover:text-orange-300 transition-colors"
+            >
+              Jawad Yazbek
+            </a>
           </div>
+          <Badge variant="outline" className="text-slate-500 border-slate-600">
+            v1.0.0
+          </Badge>
         </div>
       </div>
     </div>
